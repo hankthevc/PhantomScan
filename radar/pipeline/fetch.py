@@ -26,11 +26,14 @@ def fetch_packages(
     Returns:
         Combined list of package candidates
     """
+    import os
+    
     if date_str is None:
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
 
     all_candidates = []
     sources = []
+    offline_mode = os.getenv("RADAR_OFFLINE", "0") == "1"
 
     # Initialize sources
     if "pypi" in ecosystems:
@@ -38,26 +41,45 @@ def fetch_packages(
     if "npm" in ecosystems:
         sources.append(NpmSource())
 
-    # Fetch from each source
+    # Fetch from each source with graceful error handling
     for source in track(sources, description="Fetching packages..."):
+        ecosystem_name = source.ecosystem.value
+        
         try:
             candidates = source.fetch_recent(limit)
+            
+            if not candidates:
+                console.print(f"[yellow]⚠️ No candidates from {ecosystem_name}[/yellow]")
+                continue
+            
             all_candidates.extend(candidates)
 
             # Save raw data
-            raw_path = get_data_path(date_str, "raw") / f"{source.ecosystem.value}.jsonl"
+            raw_path = get_data_path(date_str, "raw") / f"{ecosystem_name}.jsonl"
             raw_data = [c.model_dump(mode="json") for c in candidates]
             save_jsonl(raw_data, raw_path)
 
+            mode_label = "(offline)" if offline_mode else "(online)"
             console.print(
-                f"[green]✓ Saved {len(candidates)} {source.ecosystem.value} packages to {raw_path}[/green]"
+                f"[green]✓ Saved {len(candidates)} {ecosystem_name} packages {mode_label} to {raw_path}[/green]"
             )
 
         except Exception as e:
-            console.print(f"[red]✗ Error fetching from {source.ecosystem.value}: {e}[/red]")
+            console.print(f"[red]✗ Error fetching from {ecosystem_name}: {e}[/red]")
+            
+            # If online mode failed, suggest offline mode
+            if not offline_mode:
+                console.print(f"[yellow]💡 Tip: Set RADAR_OFFLINE=1 to use seed data for {ecosystem_name}[/yellow]")
 
         finally:
-            source.close()
+            try:
+                source.close()
+            except Exception:
+                pass  # Ignore cleanup errors
 
-    console.print(f"[bold green]Total fetched: {len(all_candidates)} packages[/bold green]")
+    if all_candidates:
+        console.print(f"[bold green]Total fetched: {len(all_candidates)} packages[/bold green]")
+    else:
+        console.print("[yellow]⚠️ No packages fetched from any source[/yellow]")
+        
     return all_candidates

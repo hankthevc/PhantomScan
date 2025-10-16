@@ -65,6 +65,7 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
 
     # Save to Parquet
     processed_path = get_data_path(date_str, "processed")
+    processed_path.mkdir(parents=True, exist_ok=True)
     parquet_file = processed_path / "scored.parquet"
 
     records = []

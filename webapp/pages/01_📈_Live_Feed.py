@@ -1,5 +1,7 @@
 """Live Feed page - Browse daily suspicious packages."""
 
+import os
+import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -40,6 +42,16 @@ def get_available_dates() -> list[str]:
     return sorted(dates, reverse=True)
 
 
+# Check for today's feed
+today = datetime.utcnow().strftime("%Y-%m-%d")
+offline_mode = os.getenv("RADAR_OFFLINE", "0") == "1"
+
+# Data source banner
+if offline_mode:
+    st.info("🔌 **OFFLINE MODE** - Using sample seed data for demo purposes")
+else:
+    st.success("🌐 **ONLINE MODE** - Fetching live package data")
+
 # Date selector
 col1, col2 = st.columns([1, 3])
 
@@ -47,7 +59,29 @@ with col1:
     available_dates = get_available_dates()
 
     if not available_dates:
-        st.error("No feed data available. Run `radar run-all` to generate feeds.")
+        st.error("⚠️ No feed data available")
+        
+        if st.button("🚀 Generate Feed Now"):
+            with st.spinner("Generating feed (offline mode)..."):
+                try:
+                    # Run radar in offline mode
+                    result = subprocess.run(
+                        ["radar", "run-all", "--limit", "100"],
+                        env={**os.environ, "RADAR_OFFLINE": "1"},
+                        capture_output=True,
+                        text=True,
+                    )
+                    
+                    if result.returncode == 0:
+                        st.success("✅ Feed generated successfully! Refresh the page.")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ Feed generation failed: {result.stderr}")
+                except Exception as e:
+                    st.error(f"❌ Error: {e}")
+        
+        st.markdown("Or run from terminal:")
+        st.code("RADAR_OFFLINE=1 radar run-all", language="bash")
         st.stop()
 
     selected_date = st.selectbox(
@@ -57,7 +91,13 @@ with col1:
     )
 
 with col2:
-    st.info(f"📅 Showing feed for **{selected_date}** ({len(available_dates)} dates available)")
+    feed_info = f"📅 Showing feed for **{selected_date}** ({len(available_dates)} dates available)"
+    
+    # Check if today's feed exists
+    if today not in available_dates:
+        feed_info += f"\n\n⚠️ Today's feed ({today}) not yet generated"
+    
+    st.info(feed_info)
 
 # Load feed
 feed_data = load_feed_for_date(selected_date)
@@ -65,6 +105,21 @@ feed_data = load_feed_for_date(selected_date)
 if not feed_data:
     st.error(f"Failed to load feed for {selected_date}")
     st.stop()
+
+st.markdown("---")
+
+# Feed metadata banner
+col_banner1, col_banner2, col_banner3 = st.columns([2, 2, 1])
+
+with col_banner1:
+    st.markdown(f"**📅 Data Date:** {selected_date}")
+
+with col_banner2:
+    mode_str = "Offline (Seed Data)" if offline_mode else "Online (Live)"
+    st.markdown(f"**🔌 Mode:** {mode_str}")
+
+with col_banner3:
+    st.markdown(f"**📦 Candidates:** {len(feed_data)}")
 
 st.markdown("---")
 
