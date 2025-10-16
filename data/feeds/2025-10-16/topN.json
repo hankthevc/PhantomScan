@@ -1,68 +1,1102 @@
 [
   {
-    "ecosystem": "npm",
-    "name": "microsoft-utils",
-    "version": "1.0.0",
-    "created_at": "2024-10-15T11:00:00",
-    "score": 0.6900000000000001,
+    "ecosystem": "pypi",
+    "name": "llmeval-sdk",
+    "version": "0.1.5",
+    "created_at": "2025-10-16T13:39:23.502607",
+    "score": 0.655,
     "breakdown": {
-      "name_suspicion": 0.8,
-      "newness": 0.0,
-      "repo_missing": 1.0,
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.5,
       "maintainer_reputation": 1.0,
-      "script_risk": 1.0
+      "script_risk": 0.0
     },
-    "homepage": null,
+    "homepage": "https://github.com/RGGH/llmeval",
     "repository": null,
     "maintainers_count": 1,
-    "has_install_scripts": true,
+    "has_install_scripts": false,
     "reasons": [
-      "[\"Contains brand prefix 'microsoft'\",\"Contains trope suffix '-utils'\",\"No repository or homepage\",\"Single maintainer\",\"Has install/preinstall/postinstall scripts\"]"
+      "[\"Contains trope suffix '-sdk'\",\"Published today\",\"No repository URL\",\"Single maintainer\"]"
     ],
-    "scored_at": "2025-10-16T14:17:40.000961"
+    "scored_at": "2025-10-16T14:31:04.894010"
   },
   {
-    "ecosystem": "npm",
-    "name": "openai-tools",
+    "ecosystem": "pypi",
+    "name": "langchain-velatir",
+    "version": "0.0.2",
+    "created_at": "2025-10-16T06:13:37.535692",
+    "score": 0.64,
+    "breakdown": {
+      "name_suspicion": 0.8,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/langchain-velatir/",
+    "repository": "https://github.com/velatir/langchain-velatir",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains brand prefix 'langchain'\",\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895543"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "vyre-sdk",
     "version": "1.2.0",
-    "created_at": "2024-10-15T15:40:00",
-    "score": 0.6900000000000001,
+    "created_at": "2025-10-16T13:16:18.342293",
+    "score": 0.58,
     "breakdown": {
-      "name_suspicion": 0.8,
-      "newness": 0.0,
-      "repo_missing": 1.0,
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.0,
       "maintainer_reputation": 1.0,
-      "script_risk": 1.0
+      "script_risk": 0.0
     },
-    "homepage": null,
-    "repository": null,
+    "homepage": "https://github.com/vyre/vyre-python-sdk",
+    "repository": "https://github.com/vyre/vyre-python-sdk",
     "maintainers_count": 1,
-    "has_install_scripts": true,
+    "has_install_scripts": false,
     "reasons": [
-      "[\"Contains brand prefix 'openai'\",\"Contains trope suffix '-tools'\",\"No repository or homepage\",\"Single maintainer\",\"Has install/preinstall/postinstall scripts\"]"
+      "[\"Contains trope suffix '-sdk'\",\"Published today\",\"Single maintainer\"]"
     ],
-    "scored_at": "2025-10-16T14:17:40.001007"
+    "scored_at": "2025-10-16T14:31:04.894246"
   },
   {
-    "ecosystem": "npm",
-    "name": "copilot-sdk",
-    "version": "0.0.1",
-    "created_at": "2024-10-16T09:30:00",
-    "score": 0.6900000000000001,
+    "ecosystem": "pypi",
+    "name": "projectaria-mps",
+    "version": "1.0.0a4",
+    "created_at": "2025-10-16T13:17:15.828491",
+    "score": 0.475,
     "breakdown": {
-      "name_suspicion": 0.8,
-      "newness": 0.0,
-      "repo_missing": 1.0,
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
       "maintainer_reputation": 1.0,
-      "script_risk": 1.0
+      "script_risk": 0.0
     },
-    "homepage": null,
+    "homepage": "https://pypi.org/project/projectaria-mps/",
     "repository": null,
     "maintainers_count": 1,
-    "has_install_scripts": true,
+    "has_install_scripts": false,
     "reasons": [
-      "[\"Contains brand prefix 'copilot'\",\"Contains trope suffix '-sdk'\",\"No repository or homepage\",\"Single maintainer\",\"Has install/preinstall/postinstall scripts\"]"
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
     ],
-    "scored_at": "2025-10-16T14:17:40.001044"
+    "scored_at": "2025-10-16T14:31:04.895255"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "antlr4-tools-ken.domino",
+    "version": "0.3",
+    "created_at": "2025-10-16T13:38:29.823279",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "http://www.antlr.org",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895652"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "royal-mail-click-and-drop",
+    "version": "0.0.6",
+    "created_at": "2025-10-16T14:01:32.458080",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/royal-mail-click-and-drop/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.893901"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "birdie",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T12:33:35.254166",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/birdie/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894095"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "crowdsec-local-mcp",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T12:56:18.758162",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/crowdsec-local-mcp/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894109"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "pygame-ui-utilities",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T14:14:26.891438",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/pygame-ui-utilities/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894304"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "arc-superset-arrow",
+    "version": "1.0.0",
+    "created_at": "2025-10-16T13:33:30.779747",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/basekick-labs/arc-superset-arrow",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894534"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "dbt-swap",
+    "version": "1.0.1",
+    "created_at": "2025-10-16T13:22:30.055033",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/dbt-swap/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894612"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "clax-models",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T12:19:47.391180",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/clax-models/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894879"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "exasol-mcp-server-governed-sql",
+    "version": "1.0.0",
+    "created_at": "2025-10-16T14:16:37.258318",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/exasol-mcp-server-governed-sql/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894949"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "django-ai-support",
+    "version": "0.1.8",
+    "created_at": "2025-10-16T11:44:05.881531",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/django-ai-support/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895102"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "test-tracer",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:39:14.474460",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/test-tracer/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.893671"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "homelink-integration-api",
+    "version": "0.0.1",
+    "created_at": "2025-10-16T13:20:36.123338",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/homelink-integration-api/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895269"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "cogents-browser-use",
+    "version": "0.1.1",
+    "created_at": "2025-10-16T13:56:00.283420",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/cogents-browser-use/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895298"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "Robotic-Arm-Custom",
+    "version": "1.1.1rc1",
+    "created_at": "2025-10-16T13:16:36.976737",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/Robotic-Arm-Custom/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895311"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "nnunetv2-neuropoly",
+    "version": "2.6.2",
+    "created_at": "2025-10-16T14:00:30.936039",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/nnunetv2-neuropoly/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895399"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "unifisa_core",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:57:38.259950",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/unifisa_core/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895441"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "PyStructLayout",
+    "version": "1.0.0",
+    "created_at": "2025-10-16T12:55:55.087188",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/PyStructLayout/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895515"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "keras-custom",
+    "version": "0.1.1",
+    "created_at": "2025-10-16T14:17:56.850023",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/keras-custom/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895564"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "instanexus",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:39:23.600930",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/instanexus/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895578"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "clickzetta-semantic-model-generator",
+    "version": "1.0.1",
+    "created_at": "2025-10-16T12:25:21.474492",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/clickzetta-semantic-model-generator/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895607"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "altdata",
+    "version": "0.0.1",
+    "created_at": "2025-10-16T14:03:02.801161",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/altdata/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.893886"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "welearn-database",
+    "version": "0.2.4",
+    "created_at": "2025-10-14T12:32:57.164613",
+    "score": 0.45833333333333337,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.9333333333333333,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/welearn-database/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 2 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894042"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "terraform-snapshot-test",
+    "version": "0.0.3",
+    "created_at": "2025-10-12T21:22:53.196987",
+    "score": 0.44999999999999996,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.9,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/terraform-snapshot-test/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 3 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895050"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "airobo",
+    "version": "0.1.64",
+    "created_at": "2025-10-11T12:02:20.559425",
+    "score": 0.43333333333333335,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.8333333333333334,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/airobo/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 5 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895283"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "rerun-sdk",
+    "version": "0.26.0",
+    "created_at": "2023-02-14T21:47:18.518373",
+    "score": 0.405,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/rerun-sdk/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-sdk'\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895067"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "japanese-address-parser-py",
+    "version": "0.2.10",
+    "created_at": "2024-03-31T08:04:40.610322",
+    "score": 0.405,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/japanese-address-parser-py/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-py'\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894968"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "genesis-ci-tools",
+    "version": "0.3.0",
+    "created_at": "2025-06-26T08:20:02.029812",
+    "score": 0.405,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/infraguys/genesis_ci_tools",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-tools'\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894774"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "ssm-cli",
+    "version": "0.0.9",
+    "created_at": "2025-03-20T16:58:39.404365",
+    "score": 0.405,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/ssm-cli/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895592"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "91life-ds-lib",
+    "version": "1.0.0",
+    "created_at": "2025-10-16T12:42:26.157974",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/91life-ds-lib/",
+    "repository": "https://github.com/91life/91life-ds-lib.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895169"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "git-project-xray-mcp",
+    "version": "0.2.3",
+    "created_at": "2025-10-16T13:06:32.701344",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/git-project-xray-mcp/",
+    "repository": "https://github.com/Jamie-BitFlight/git-project-xray-mcp",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895327"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "moai-adk",
+    "version": "0.3.1",
+    "created_at": "2025-10-16T13:48:20.327207",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/moai-adk/",
+    "repository": "https://github.com/modu-ai/moai-adk",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894058"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "orb-cloud-client",
+    "version": "1.2.1",
+    "created_at": "2025-10-16T14:12:53.945970",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/orb-cloud-client/",
+    "repository": "https://github.com/orbforge/orb-cloud",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894184"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "mcp-openproject",
+    "version": "0.0.1",
+    "created_at": "2025-10-16T12:35:03.355975",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/mcp-openproject/",
+    "repository": "https://github.com/your-org/mcp-openproject.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894200"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "strands-valkey-session-manager",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T14:09:14.865298",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/strands-valkey-session-manager/",
+    "repository": "https://github.com/jeromevdl/strands-valkey-session-manager",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894231"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "loppers",
+    "version": "1.4.0",
+    "created_at": "2025-10-16T08:56:26.626876",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/loppers/",
+    "repository": "https://github.com/undo76/loppers",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894290"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "align_trim",
+    "version": "1.0.2",
+    "created_at": "2025-10-16T12:42:56.521766",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/align_trim/",
+    "repository": "https://github.com/artic-network/align_trim.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894382"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "mcl-tool",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:44:21.712610",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/mcl-tool/",
+    "repository": "https://github.com/yourusername/mcl-tool",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894438"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "cota",
+    "version": "1.0.1",
+    "created_at": "2025-10-16T13:01:30.120803",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/CotaAI/cota",
+    "repository": "https://github.com/CotaAI/cota",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894837"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "pvstream",
+    "version": "0.1.0a1",
+    "created_at": "2025-10-16T13:23:08.001344",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/pvstream/",
+    "repository": "https://github.com/vegardege/pvstream",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894850"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "minidraw",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:26:44.495662",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/minidraw/",
+    "repository": "https://github.com/liborw/minidraw",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895036"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "pyeqsolver",
+    "version": "1.0.0",
+    "created_at": "2025-10-16T14:24:15.902653",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/Hammail-Riaz/pyeqsolver",
+    "repository": "https://github.com/Hammail-Riaz/pyeqsolver",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.893760"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "ndslice",
+    "version": "0.1.3",
+    "created_at": "2025-10-16T08:51:59.347595",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/ndslice/",
+    "repository": "https://github.com/henricryden/ndslice",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.895228"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "math2remember",
+    "version": "0.1.0",
+    "created_at": "2025-10-16T13:24:02.798509",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/math2remember/",
+    "repository": "https://github.com/ChDxterWard/math2remember",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.893976"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "webtoolkit",
+    "version": "0.0.13",
+    "created_at": "2025-10-06T14:24:22.522448",
+    "score": 0.3916666666666667,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.6666666666666667,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/webtoolkit/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 10 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894654"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "vibe-reader",
+    "version": "0.1.5",
+    "created_at": "2025-10-04T11:34:34.639074",
+    "score": 0.375,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.6,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/vibe-reader/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 12 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894700"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "chaoschain-sdk",
+    "version": "0.2.1",
+    "created_at": "2025-09-20T14:34:04.894415",
+    "score": 0.37166666666666665,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.16666666666666663,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/chaoschain-sdk/",
+    "repository": "https://github.com/ChaosChain/chaoschain",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-sdk'\",\"Only 25 days old\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-16T14:31:04.894215"
   }
 ]
