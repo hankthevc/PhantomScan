@@ -1,0 +1,107 @@
+# Phantom Dependency Radar Policy Configuration
+
+# Data sources configuration
+sources:
+  pypi:
+    enabled: true
+    fetch_limit: 200  # Max packages to fetch per run
+    timeout_seconds: 30
+    rss_feeds:
+      - "https://pypi.org/rss/packages.xml"
+      - "https://pypi.org/rss/updates.xml"
+    
+  npm:
+    enabled: true
+    fetch_limit: 200  # Max packages to fetch per run
+    timeout_seconds: 30
+    changes_feed: "https://replicate.npmjs.com/_changes?descending=true&limit=1000&include_docs=true"
+
+# Scoring weights (must sum to 1.0)
+scoring:
+  weights:
+    name_suspicion: 0.30
+    newness: 0.25
+    repo_missing: 0.15
+    maintainer_reputation: 0.15
+    script_risk: 0.15
+  
+  # Thresholds and parameters
+  new_package_days: 30  # Packages newer than this get high newness score
+  
+  # Suspicious name patterns
+  suspicious_prefixes:
+    - "openai"
+    - "huggingface" 
+    - "microsoft"
+    - "azure"
+    - "copilot"
+    - "langchain"
+    - "anthropic"
+    - "claude"
+    - "chatgpt"
+    - "gpt"
+    
+  suspicious_suffixes:
+    - "-cli"
+    - "-tools" 
+    - "-utils"
+    - "-sdk"
+    - "-x"
+    - "2"
+    - "-py"
+    - "-python"
+    - "-js"
+    
+  # Popular packages to check similarity against
+  canonical_packages:
+    pypi:
+      - "requests"
+      - "numpy" 
+      - "pandas"
+      - "torch"
+      - "tensorflow"
+      - "scikit-learn"
+      - "matplotlib"
+      - "flask"
+      - "django"
+      - "fastapi"
+      - "pydantic"
+      - "click"
+      - "boto3"
+    npm:
+      - "react"
+      - "lodash"
+      - "axios"
+      - "express"
+      - "moment"
+      - "webpack"
+      - "typescript"
+      - "eslint"
+      - "prettier"
+      - "jest"
+      - "babel"
+      - "jquery"
+
+# Feed generation
+feeds:
+  top_n: 50  # Number of top suspicious packages to include in feed
+  include_scores: true
+  include_reasons: true
+  
+# Network settings
+network:
+  user_agent: "PhantomDependencyRadar/0.1.0 (Security Research)"
+  retry_attempts: 3
+  retry_delay_seconds: 2
+
+# Storage settings
+storage:
+  keep_raw_days: 30  # Days to keep raw data files
+  keep_processed_days: 90  # Days to keep processed data
+  
+# Offline mode
+offline:
+  enabled: false  # Set to true or use RADAR_OFFLINE=1 env var
+  seed_files:
+    pypi: "data/samples/pypi_seed.jsonl"
+    npm: "data/samples/npm_seed.jsonl"

@@ -1,0 +1,16 @@
+timestamp,device_id,process_name,command_line,user
+2024-10-16T10:15:00Z,WS001,pip,pip install requests2,alice
+2024-10-16T10:16:30Z,WS002,npm,npm install lodash-x,bob
+2024-10-16T10:18:45Z,WS003,pip,pip install numpy-plus pandas2,charlie
+2024-10-16T10:20:12Z,WS004,npm,npm install react2 --save,diana
+2024-10-16T10:22:30Z,WS005,pip,pip install openai-tools tensorflow-cli,eve
+2024-10-16T10:25:00Z,WS006,npm,npm i express-cli webpack-utils,frank
+2024-10-16T10:27:15Z,WS007,pip,pip install huggingface-utils microsoft-sdk,grace
+2024-10-16T10:30:00Z,WS008,npm,npm install axios2 moment-plus,henry
+2024-10-16T10:32:45Z,WS009,pip,pip install azure-tools langchain-x,irene
+2024-10-16T10:35:30Z,WS010,npm,npm install typescript-tools jquery2,jack
+2024-10-16T10:38:00Z,WS011,pip,pip install requests numpy pandas,alice
+2024-10-16T10:40:15Z,WS012,npm,npm install lodash react express,bob
+2024-10-16T10:42:30Z,WS013,pip,python -m pip install babel-x,charlie
+2024-10-16T10:45:00Z,WS014,npm,yarn add requests2,diana
+2024-10-16T10:47:30Z,WS015,pip,pip3 install openai langchain,eve
