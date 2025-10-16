@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Worker service - runs the radar pipeline
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: phantom-worker
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    environment:
+      - RADAR_OFFLINE=${RADAR_OFFLINE:-0}
+    restart: on-failure
+    networks:
+      - phantom-net
+
+  # Web service - Streamlit UI
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: phantom-web
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      - worker
+    restart: unless-stopped
+    networks:
+      - phantom-net
+
+  # API service - FastAPI
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: phantom-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      - worker
+    restart: unless-stopped
+    networks:
+      - phantom-net
+
+networks:
+  phantom-net:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local

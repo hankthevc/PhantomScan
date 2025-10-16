@@ -1,0 +1,7 @@
+{"info": {"name": "requests2", "version": "0.0.1", "summary": "HTTP library (alternative)", "home_page": null, "project_urls": null}, "releases": {"0.0.1": [{"upload_time_iso_8601": "2024-10-15T12:00:00Z"}]}}
+{"info": {"name": "openai-tools", "version": "1.0.0", "summary": "OpenAI helper utilities", "home_page": null, "project_urls": null}, "releases": {"1.0.0": [{"upload_time_iso_8601": "2024-10-15T14:30:00Z"}]}}
+{"info": {"name": "langchain-sdk", "version": "0.1.0", "summary": "LangChain SDK wrapper", "home_page": null, "project_urls": null}, "releases": {"0.1.0": [{"upload_time_iso_8601": "2024-10-15T16:45:00Z"}]}}
+{"info": {"name": "copilot-x", "version": "2.0.0", "summary": "Copilot extensions", "home_page": null, "project_urls": null}, "releases": {"2.0.0": [{"upload_time_iso_8601": "2024-10-16T08:00:00Z"}]}}
+{"info": {"name": "numpy2", "version": "1.0.0", "summary": "NumPy alternative implementation", "home_page": null, "project_urls": null}, "releases": {"1.0.0": [{"upload_time_iso_8601": "2024-10-16T09:15:00Z"}]}}
+{"info": {"name": "huggingface-cli", "version": "0.2.0", "summary": "HuggingFace command line tools", "home_page": null, "project_urls": null}, "releases": {"0.2.0": [{"upload_time_iso_8601": "2024-10-16T10:30:00Z"}]}}
+{"info": {"name": "legitimate-package", "version": "5.2.1", "summary": "A well-established package", "home_page": "https://legitimate-package.org", "project_urls": {"Source": "https://github.com/legit/package"}}, "releases": {"5.2.1": [{"upload_time_iso_8601": "2020-01-01T00:00:00Z"}]}}

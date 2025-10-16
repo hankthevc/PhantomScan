@@ -1,0 +1,30 @@
+# Dockerfile for radar worker (CLI pipeline)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy project files
+COPY pyproject.toml .
+COPY README.md .
+COPY LICENSE .
+
+# Copy source code
+COPY radar/ radar/
+COPY config/ config/
+COPY data/ data/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -e .
+
+# Create data directories
+RUN mkdir -p data/raw data/processed data/feeds data/samples
+
+# Default command runs the full pipeline
+CMD ["radar", "run-all"]

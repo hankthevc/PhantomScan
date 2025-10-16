@@ -1,0 +1,167 @@
+# Security Casefile: {{ pkg.name }}
+
+**Generated**: {{ now }}  
+**Analyst**: PhantomScan Automated Analysis  
+**Ecosystem**: {{ pkg.ecosystem | upper }}  
+**Risk Score**: {{ "%.2f"|format(pkg.score) }} / 1.00
+
+---
+
+## Executive Summary
+
+Package `{{ pkg.name }}` ({{ pkg.ecosystem }}) was flagged by PhantomScan on {{ date }} with a risk score of **{{ "%.2f"|format(pkg.score) }}**.
+
+{% if pkg.score >= 0.7 %}
+**Recommendation**: 🔴 HIGH PRIORITY - Investigate immediately and consider blocking.
+{% elif pkg.score >= 0.5 %}
+**Recommendation**: 🟡 MEDIUM PRIORITY - Review metadata and monitor for suspicious activity.
+{% else %}
+**Recommendation**: 🟢 LOW PRIORITY - Informational; may be a false positive.
+{% endif %}
+
+---
+
+## Package Metadata
+
+| Field | Value |
+|-------|-------|
+| **Name** | `{{ pkg.name }}` |
+| **Version** | {{ pkg.version }} |
+| **Ecosystem** | {{ pkg.ecosystem | upper }} |
+| **Published** | {{ pkg.created_at[:10] }} |
+| **Homepage** | {{ pkg.homepage if pkg.homepage else "❌ Not provided" }} |
+| **Repository** | {{ pkg.repository if pkg.repository else "❌ Not provided" }} |
+| **Maintainers** | {{ pkg.maintainers_count }} |
+| **Install Scripts** | {{ "⚠️ Yes" if pkg.has_install_scripts else "✓ No" }} |
+
+---
+
+## Risk Assessment
+
+### Overall Score: {{ "%.2f"|format(pkg.score) }}
+
+{% if pkg.score >= 0.7 %}
+This package exhibits **multiple high-risk indicators** and should be treated as potentially malicious until proven otherwise.
+{% elif pkg.score >= 0.5 %}
+This package shows **several suspicious characteristics** that warrant investigation.
+{% else %}
+This package has **mild risk indicators** but may be legitimate. Verify with maintainer research.
+{% endif %}
+
+### Score Breakdown
+
+| Heuristic | Score | Weight |
+|-----------|-------|--------|
+| Name Suspicion | {{ "%.2f"|format(pkg.breakdown.name_suspicion) }} | 30% |
+| Newness | {{ "%.2f"|format(pkg.breakdown.newness) }} | 25% |
+| Repo Missing | {{ "%.2f"|format(pkg.breakdown.repo_missing) }} | 15% |
+| Maintainer Reputation | {{ "%.2f"|format(pkg.breakdown.maintainer_reputation) }} | 15% |
+| Script Risk | {{ "%.2f"|format(pkg.breakdown.script_risk) }} | 15% |
+
+### Flagged Indicators
+
+{% if pkg.reasons %}
+{% for reason in pkg.reasons %}
+- ⚠️ {{ reason }}
+{% endfor %}
+{% else %}
+- ℹ️ No specific risk factors identified beyond baseline scoring.
+{% endif %}
+
+---
+
+## Investigation Steps
+
+### 1. Metadata Verification
+- [ ] Review package description for typos or suspicious wording
+- [ ] Check if homepage/repository URLs are valid and related to package functionality
+- [ ] Verify maintainer identity (GitHub profile, npm/PyPI history)
+
+### 2. Code Review
+{% if pkg.ecosystem == "pypi" %}
+- [ ] Download package: `pip download {{ pkg.name }}=={{ pkg.version }}`
+- [ ] Extract and inspect setup.py, __init__.py, and entry points
+- [ ] Check for obfuscated code, base64 strings, or suspicious network calls
+{% else %}
+- [ ] Download package: `npm pack {{ pkg.name }}@{{ pkg.version }}`
+- [ ] Inspect package.json scripts (especially install hooks)
+- [ ] Review JavaScript for obfuscation or suspicious behavior
+{% endif %}
+
+### 3. Behavioral Analysis
+- [ ] Test in isolated sandbox (Docker, VM, or cloud sandbox)
+- [ ] Monitor network traffic during installation
+- [ ] Check for filesystem modifications outside package directories
+- [ ] Verify no unauthorized outbound connections
+
+### 4. Threat Intelligence
+- [ ] Search for package name in security advisories
+- [ ] Check VirusTotal or similar services
+- [ ] Query OSINT feeds for related indicators
+- [ ] Review similar package names for campaigns
+
+---
+
+## Recommended Actions
+
+{% if pkg.score >= 0.7 %}
+### Immediate Actions
+1. **Block package** in CI/CD pipelines and dependency scanners
+2. **Scan environment** for existing installations using hunt pack
+3. **Report to registry** (security@pypi.org or security@npmjs.com) if confirmed malicious
+4. **Alert development teams** via internal channels
+
+### Follow-up
+- Monitor for variant packages with similar naming patterns
+- Update detection rules with identified IOCs
+{% elif pkg.score >= 0.5 %}
+### Recommended Actions
+1. **Manual review** by security analyst
+2. **Monitor installations** using SIEM queries
+3. **Escalate if confirmed** malicious
+
+### Follow-up
+- Document findings in incident tracking system
+- Share insights with security community if appropriate
+{% else %}
+### Recommended Actions
+1. **Low-priority review** when time permits
+2. **No immediate blocking** required
+
+### Follow-up
+- Track for pattern analysis
+{% endif %}
+
+---
+
+## SIEM Detection
+
+Use the hunt pack queries in `hunts/kql/` or `hunts/splunk/` to detect installations of this package across your environment.
+
+{% if pkg.ecosystem == "pypi" %}
+**PyPI Detection Pattern**:
+```
+pip install {{ pkg.name }}
+```
+{% else %}
+**npm Detection Pattern**:
+```
+npm install {{ pkg.name }}
+npm i {{ pkg.name }}
+```
+{% endif %}
+
+---
+
+## References
+
+- [PhantomScan Documentation](https://github.com/example/phantom-dependency-radar)
+- [PyPI Terms of Use](https://pypi.org/policy/terms-of-use/)
+- [npm Security Reporting](https://docs.npmjs.com/reporting-a-vulnerability-in-an-npm-package)
+- [MITRE ATT&CK: Supply Chain Compromise](https://attack.mitre.org/techniques/T1195/)
+
+---
+
+**Case ID**: {{ pkg.ecosystem }}_{{ pkg.name }}_{{ date }}  
+**Generated by**: PhantomScan v0.1.0  
+**Status**: OPEN - Awaiting Analyst Review

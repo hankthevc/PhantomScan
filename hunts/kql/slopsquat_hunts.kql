@@ -1,0 +1,137 @@
+// PhantomScan Hunt Pack - KQL (Azure Sentinel / Defender)
+// Detects installations of suspicious packages from PhantomScan feed
+
+// ================================
+// Hunt 1: Detect pip/npm installs
+// ================================
+
+// Step 1: Load PhantomScan radar feed as external data
+// Upload today's topN.json as a CSV to a blob storage or use inline data
+let RadarFeed = externaldata(
+    ecosystem: string,
+    name: string,
+    score: real,
+    created_at: datetime
+)
+[
+    // Replace with your blob storage URL or use the sample below
+    // @"https://yourstorage.blob.core.windows.net/feeds/topN.csv"
+    // For demo, using inline literal data:
+]
+with (format="csv", ignoreFirstRecord=true);
+
+// Step 2: Extract package installations from process command lines
+let PipInstalls = 
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has_any ("pip install", "pip3 install", "python -m pip install")
+    | extend PackageName = extract(@"pip(?:3)? install\s+([a-zA-Z0-9_-]+)", 1, ProcessCommandLine)
+    | where isnotempty(PackageName)
+    | project Timestamp, DeviceName, AccountName, ProcessCommandLine, PackageName, Ecosystem = "pypi";
+
+let NpmInstalls = 
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has_any ("npm install", "npm i ", "yarn add")
+    | extend PackageName = extract(@"(?:npm install|npm i|yarn add)\s+([a-zA-Z0-9_@/-]+)", 1, ProcessCommandLine)
+    | where isnotempty(PackageName)
+    | project Timestamp, DeviceName, AccountName, ProcessCommandLine, PackageName, Ecosystem = "npm";
+
+let AllInstalls = union PipInstalls, NpmInstalls;
+
+// Step 3: Join with radar feed to find matches
+AllInstalls
+| join kind=inner (RadarFeed) on $left.PackageName == $right.name, $left.Ecosystem == $right.ecosystem
+| project 
+    Timestamp,
+    DeviceName,
+    AccountName,
+    Ecosystem,
+    PackageName,
+    RiskScore = score,
+    CommandLine = ProcessCommandLine,
+    PackageCreated = created_at
+| sort by RiskScore desc, Timestamp desc
+
+
+// ================================
+// Hunt 2: Demo with sample data
+// ================================
+
+// For demo purposes, load sample device process data
+let SampleProcesses = externaldata(
+    Timestamp: datetime,
+    DeviceName: string,
+    AccountName: string,
+    ProcessCommandLine: string
+)
+[
+    // Load from data/samples/device_procs.csv
+    // @"https://raw.githubusercontent.com/.../device_procs.csv"
+]
+with (format="csv", ignoreFirstRecord=true);
+
+// Extract package names
+SampleProcesses
+| where ProcessCommandLine has_any ("pip install", "npm install")
+| extend PackageName = iff(
+    ProcessCommandLine has "pip",
+    extract(@"pip(?:3)? install\s+([a-zA-Z0-9_-]+)", 1, ProcessCommandLine),
+    extract(@"npm install\s+([a-zA-Z0-9_@/-]+)", 1, ProcessCommandLine)
+)
+| extend Ecosystem = iff(ProcessCommandLine has "pip", "pypi", "npm")
+| where isnotempty(PackageName)
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, PackageName, Ecosystem
+
+
+// ================================
+// Hunt 3: Suspicious install patterns
+// ================================
+
+// Detect rapid installation of multiple packages in short time
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where ProcessCommandLine has_any ("pip install", "npm install")
+| extend PackageName = extract(@"(?:pip(?:3)?|npm) install\s+([a-zA-Z0-9_@/-]+)", 1, ProcessCommandLine)
+| where isnotempty(PackageName)
+| summarize 
+    InstallCount = count(),
+    UniquePackages = make_set(PackageName),
+    Commands = make_list(ProcessCommandLine)
+    by DeviceName, AccountName, bin(Timestamp, 5m)
+| where InstallCount >= 5
+| project Timestamp, DeviceName, AccountName, InstallCount, UniquePackages, Commands
+| sort by InstallCount desc
+
+
+// ================================
+// Hunt 4: Installations from unusual users
+// ================================
+
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("pip install", "npm install")
+| extend PackageName = extract(@"(?:pip(?:3)?|npm) install\s+([a-zA-Z0-9_@/-]+)", 1, ProcessCommandLine)
+| where isnotempty(PackageName)
+| summarize 
+    FirstSeen = min(Timestamp),
+    LastSeen = max(Timestamp),
+    InstallCount = count(),
+    Devices = dcount(DeviceName)
+    by AccountName, PackageName
+| where InstallCount == 1 and Devices == 1  // Unusual one-time installs
+| sort by LastSeen desc
+
+
+// ================================
+// Hunt 5: Brand prefix patterns
+// ================================
+
+// Detect installations of packages with brand prefixes (openai-, langchain-, etc.)
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("pip install", "npm install")
+| extend PackageName = extract(@"(?:pip(?:3)?|npm) install\s+([a-zA-Z0-9_@/-]+)", 1, ProcessCommandLine)
+| where PackageName matches regex @"^(openai|langchain|huggingface|microsoft|azure|copilot)-"
+| project Timestamp, DeviceName, AccountName, PackageName, ProcessCommandLine
+| sort by Timestamp desc
