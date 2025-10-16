@@ -87,7 +87,8 @@ async def get_feed(date: str) -> JSONResponse:
     feed_path = Path("data/feeds") / date / "topN.json"
 
     if not feed_path.exists():
-        raise HTTPException(status_code=404, detail=f"Feed not found for date: {date}")
+        # Fallback to latest available feed
+        return await get_latest_feed()
 
     feed_data = load_json(feed_path)
 

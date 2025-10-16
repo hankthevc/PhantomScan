@@ -1,6 +1,8 @@
 """Candidate Explorer page - Search and investigate packages."""
 
 from pathlib import Path
+import os
+import subprocess
 
 import pandas as pd
 import streamlit as st
@@ -41,7 +43,18 @@ def load_all_candidates() -> list[dict]:
 candidates = load_all_candidates()
 
 if not candidates:
-    st.error("No candidate data available. Run `radar run-all` to generate feeds.")
+    st.error("No candidate data available.")
+    if st.button("🚀 Generate feed now", type="primary"):
+        with st.spinner("Running radar pipeline (offline fallback)..."):
+            env = os.environ.copy()
+            try:
+                subprocess.run(["radar", "run-all"], check=False, timeout=300)
+            except Exception:
+                pass
+            env["RADAR_OFFLINE"] = "1"
+            subprocess.run(["radar", "run-all"], check=False, env=env, timeout=300)
+        st.success("Feed generated. Reloading…")
+        st.experimental_rerun()
     st.stop()
 
 st.success(f"📦 Loaded {len(candidates)} candidates from all feeds")

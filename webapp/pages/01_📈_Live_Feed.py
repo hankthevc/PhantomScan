@@ -1,6 +1,8 @@
 """Live Feed page - Browse daily suspicious packages."""
 
 from datetime import datetime, timedelta
+import os
+import subprocess
 from pathlib import Path
 
 import pandas as pd
@@ -47,7 +49,22 @@ with col1:
     available_dates = get_available_dates()
 
     if not available_dates:
-        st.error("No feed data available. Run `radar run-all` to generate feeds.")
+        st.error("No feed data available.")
+        col_gen, col_spacer = st.columns([1, 3])
+        with col_gen:
+            if st.button("🚀 Generate feed now", type="primary"):
+                with st.spinner("Running radar pipeline (offline fallback)..."):
+                    env = os.environ.copy()
+                    # Try live first; if it fails, fallback to offline
+                    try:
+                        subprocess.run(["radar", "run-all"], check=False, timeout=300)
+                    except Exception:
+                        pass
+                    # Always ensure an offline pass to guarantee artifacts
+                    env["RADAR_OFFLINE"] = "1"
+                    subprocess.run(["radar", "run-all"], check=False, env=env, timeout=300)
+                st.success("Feed generated. Reloading…")
+                st.experimental_rerun()
         st.stop()
 
     selected_date = st.selectbox(
@@ -57,13 +74,22 @@ with col1:
     )
 
 with col2:
-    st.info(f"📅 Showing feed for **{selected_date}** ({len(available_dates)} dates available)")
+    offline_mode = os.environ.get("RADAR_OFFLINE", "0") == "1"
+    st.info(
+        f"📅 Showing feed for **{selected_date}** · Mode: {'OFFLINE' if offline_mode else 'ONLINE'} · Available dates: {len(available_dates)}"
+    )
 
 # Load feed
 feed_data = load_feed_for_date(selected_date)
 
 if not feed_data:
     st.error(f"Failed to load feed for {selected_date}")
+    if st.button("Regenerate feed now"):
+        with st.spinner("Regenerating feed (offline fallback)…"):
+            env = os.environ.copy()
+            env["RADAR_OFFLINE"] = "1"
+            subprocess.run(["radar", "run-all"], check=False, env=env, timeout=300)
+        st.experimental_rerun()
     st.stop()
 
 st.markdown("---")

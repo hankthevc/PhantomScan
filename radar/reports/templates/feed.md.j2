@@ -3,6 +3,12 @@
 **Date**: {{ date }}  
 **Total Candidates**: {{ total_count }}
 
+{% if offline %}
+**Source**: OFFLINE SEED (demo mode)
+{% else %}
+**Source**: LIVE FETCH
+{% endif %}
+
 ---
 
 ## Top Suspicious Packages

@@ -7,7 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
 
 from radar.types import ScoredCandidate
-from radar.utils import get_data_path, load_policy, save_json
+from radar.utils import get_data_path, load_policy, save_json, is_offline_mode
 
 console = Console()
 
@@ -36,6 +36,13 @@ def generate_feed(date_str: str | None = None, top_n: int | None = None) -> None
 
     if df.empty:
         console.print(f"[yellow]No scored candidates found for {date_str}[/yellow]")
+        # Still emit empty artifacts to make the app resilient
+        feed_path = get_data_path(date_str, "feeds")
+        json_file = feed_path / "topN.json"
+        save_json([], json_file)
+        md_file = feed_path / "feed.md"
+        _render_markdown_feed([], date_str, md_file, offline=is_offline_mode())
+        console.print(f"[green]✓ Wrote empty feed artifacts to {feed_path}[/green]")
         return
 
     # Filter by minimum score and take top N
@@ -76,13 +83,15 @@ def generate_feed(date_str: str | None = None, top_n: int | None = None) -> None
 
     # Generate Markdown feed
     md_file = feed_path / "feed.md"
-    _render_markdown_feed(feed_data, date_str, md_file)
+    _render_markdown_feed(feed_data, date_str, md_file, offline=is_offline_mode())
     console.print(f"[green]✓ Saved Markdown feed to {md_file}[/green]")
 
     console.print(f"[bold green]Generated feed with {len(feed_data)} candidates[/bold green]")
 
 
-def _render_markdown_feed(feed_data: list[dict], date_str: str, output_path: Path) -> None:
+def _render_markdown_feed(
+    feed_data: list[dict], date_str: str, output_path: Path, *, offline: bool
+) -> None:
     """Render Markdown feed using Jinja template."""
     template_dir = Path("radar/reports/templates")
     env = Environment(loader=FileSystemLoader(template_dir))
@@ -92,6 +101,7 @@ def _render_markdown_feed(feed_data: list[dict], date_str: str, output_path: Pat
         date=date_str,
         candidates=feed_data,
         total_count=len(feed_data),
+        offline=offline,
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

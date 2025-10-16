@@ -22,6 +22,17 @@ make app
 make api
 ```
 
+### Smoke test the pipeline locally
+
+```bash
+# Offline demo-friendly run (creates data/feeds/TODAY/topN.json and feed.md)
+RADAR_OFFLINE=1 make run
+git add -A && git commit -m "chore: add first feed artifacts" && git push
+
+# Try live pull (fallback to offline for demos if rate-limited)
+make run
+```
+
 ## 📊 Features
 
 - **Live Feed**: Browse top-N suspicious packages by date with detailed risk scoring
@@ -45,11 +56,16 @@ make api
 Export today's feed to CSV and load into your SIEM:
 
 ```bash
-# For Splunk
-python -c "import pandas as pd; pd.read_json('data/feeds/$(date +%Y-%m-%d)/topN.json').to_csv('radar_feed.csv', index=False)"
+# Export today's feed to CSV (demo helper)
+python -c "import pandas as pd, json, os, datetime as dt; \
+d=dt.date.today().isoformat(); p=f'data/feeds/{d}/topN.json'; \
+pd.read_json(p).rename(columns={'name':'package_name'}).to_csv('hunts/radar_feed.csv', index=False)"
 
 # Then run the hunts in hunts/splunk/ or hunts/kql/
 ```
+
+Splunk users: `| inputlookup radar_feed.csv` is used in `hunts/splunk/slopsquat_hunts.spl`.
+KQL users: see `externaldata()` examples in `hunts/kql/slopsquat_hunts.kql`.
 
 ## 🐳 Docker
 
@@ -60,6 +76,39 @@ docker-compose up
 # Access Streamlit at http://localhost:8501
 # Access API at http://localhost:8000
 ```
+
+The compose stack includes:
+- a small worker that runs `radar run-all`
+- the Streamlit web app
+- the FastAPI service
+
+The `./data` directory is mounted so the app sees new feeds.
+
+### Streamlit Community Cloud (optional)
+
+- Set Python version to 3.11
+- App entry point: `webapp/app.py`
+- The app reads latest feed from `data/feeds` (kept small; Top-50 recommended). For public demos, you can also serve feeds from the repository raw path.
+
+### API usage (curl)
+
+```bash
+curl -s http://localhost:8000/health
+curl -s http://localhost:8000/feed/$(date +%Y-%m-%d)  # falls back to latest if missing
+curl -s http://localhost:8000/score -H 'Content-Type: application/json' -d '{
+  "ecosystem": "pypi",
+  "name": "requests",
+  "version": "2.31.0"
+}'
+```
+
+### Screenshots
+
+Two example screenshots to aid reviewers/recruiters:
+- Live Feed table
+- Casefile preview
+
+(Add images under `webapp/assets/` and reference here.)
 
 ## 🧪 Testing
 

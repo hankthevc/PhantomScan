@@ -1,6 +1,10 @@
 """PhantomScan Streamlit App - Main Entry Point."""
 
+import os
 import streamlit as st
+from datetime import datetime
+from pathlib import Path
+from radar.utils import load_json
 
 # Page configuration
 st.set_page_config(
@@ -44,6 +48,26 @@ st.markdown(
 )
 
 st.markdown("---")
+
+# Data banner with guardrails
+today_str = datetime.utcnow().strftime("%Y-%m-%d")
+feed_path = Path("data/feeds") / today_str / "topN.json"
+offline_mode = os.environ.get("RADAR_OFFLINE", "0") == "1"
+
+col_a, col_b, col_c, col_d = st.columns([2, 2, 2, 2])
+with col_a:
+    st.metric("Data Date", today_str)
+with col_b:
+    st.metric("Mode", "OFFLINE" if offline_mode else "ONLINE")
+with col_c:
+    count = 0
+    if feed_path.exists():
+        data = load_json(feed_path)
+        count = len(data) if data else 0
+    st.metric("Candidates", count)
+with col_d:
+    if not feed_path.exists():
+        st.warning("Today's feed is missing")
 
 # Welcome section
 st.markdown(

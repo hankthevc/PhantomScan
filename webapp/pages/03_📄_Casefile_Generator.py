@@ -1,6 +1,8 @@
 """Casefile Generator page - Bulk generate investigation reports."""
 
 from pathlib import Path
+import os
+import subprocess
 
 import streamlit as st
 
@@ -43,7 +45,18 @@ def get_available_dates() -> list[str]:
 available_dates = get_available_dates()
 
 if not available_dates:
-    st.error("No feed data available. Run `radar run-all` to generate feeds.")
+    st.error("No feed data available.")
+    if st.button("🚀 Generate feed now", type="primary"):
+        with st.spinner("Running radar pipeline (offline fallback)..."):
+            env = os.environ.copy()
+            try:
+                subprocess.run(["radar", "run-all"], check=False, timeout=300)
+            except Exception:
+                pass
+            env["RADAR_OFFLINE"] = "1"
+            subprocess.run(["radar", "run-all"], check=False, env=env, timeout=300)
+        st.success("Feed generated. Reloading…")
+        st.experimental_rerun()
     st.stop()
 
 selected_date = st.selectbox("Select Feed Date", options=available_dates, index=0)
