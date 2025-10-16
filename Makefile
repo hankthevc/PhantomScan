@@ -1,4 +1,4 @@
-.PHONY: setup lint type test run app api demo clean help
+.PHONY: setup lint type test run app api demo hunts clean help
 
 help:
 	@echo "PhantomScan Makefile"
@@ -12,6 +12,7 @@ help:
 	@echo "  app      - Launch Streamlit web app"
 	@echo "  api      - Launch FastAPI service"
 	@echo "  demo     - Run pipeline in offline mode and launch app"
+	@echo "  hunts    - Export feed to CSV for Splunk/KQL hunts"
 	@echo "  clean    - Remove cache and build artifacts"
 
 setup:
@@ -40,6 +41,9 @@ api:
 demo:
 	RADAR_OFFLINE=1 radar run-all
 	streamlit run webapp/app.py
+
+hunts:
+	python scripts/export_feed_to_hunts.py
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

@@ -45,11 +45,17 @@ make api
 Export today's feed to CSV and load into your SIEM:
 
 ```bash
-# For Splunk
-python -c "import pandas as pd; pd.read_json('data/feeds/$(date +%Y-%m-%d)/topN.json').to_csv('radar_feed.csv', index=False)"
+# Export feed to hunts CSV
+make hunts
 
-# Then run the hunts in hunts/splunk/ or hunts/kql/
+# Or manually:
+python scripts/export_feed_to_hunts.py
 ```
+
+This creates `hunts/radar_feed.csv` which you can use with:
+- **Splunk**: `| inputlookup radar_feed.csv` (see `hunts/splunk/`)
+- **KQL/Sentinel**: `externaldata()` with the CSV (see `hunts/kql/`)
+- **Detection**: Cross-reference package names with your endpoint/container telemetry
 
 ## 🐳 Docker
 
@@ -58,7 +64,35 @@ python -c "import pandas as pd; pd.read_json('data/feeds/$(date +%Y-%m-%d)/topN.
 docker-compose up
 
 # Access Streamlit at http://localhost:8501
-# Access API at http://localhost:8000
+# Access API at http://localhost:8000/docs
+```
+
+## 🔌 API Usage
+
+The FastAPI service provides programmatic access:
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Get latest feed
+curl http://localhost:8000/feed/latest
+
+# Get specific date feed
+curl http://localhost:8000/feed/2024-10-16
+
+# Score a package
+curl -X POST http://localhost:8000/score \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ecosystem": "pypi",
+    "name": "requests2",
+    "version": "2.32.0",
+    "repository": null,
+    "has_install_scripts": false
+  }'
+
+# Interactive docs at http://localhost:8000/docs
 ```
 
 ## 🧪 Testing
@@ -102,6 +136,21 @@ For demos or network-constrained environments:
 export RADAR_OFFLINE=1
 make run  # Uses seed data from data/samples/
 ```
+
+## ☁️ Deploy to Streamlit Cloud (Optional)
+
+For a public demo:
+
+1. Fork this repo
+2. Sign in to [Streamlit Cloud](https://share.streamlit.io)
+3. Create a new app:
+   - **Repository**: `your-fork/phantom-dependency-radar`
+   - **Branch**: `main`
+   - **Main file path**: `webapp/app.py`
+   - **Python version**: `3.11`
+4. The app will auto-deploy and update on commits
+
+Note: Streamlit Cloud reads feeds from the repo's `data/feeds/` directory. The daily GitHub Actions workflow will automatically commit new feeds.
 
 ## 📝 License
 

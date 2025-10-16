@@ -1,0 +1,12 @@
+package_name,ecosystem,version,publish_date,score,repository,has_install_scripts
+microsoft-utils,npm,1.0.0,2024-10-15 11:00:00,0.6900000000000001,,True
+openai-tools,npm,1.2.0,2024-10-15 15:40:00,0.6900000000000001,,True
+copilot-sdk,npm,0.0.1,2024-10-16 09:30:00,0.6900000000000001,,True
+azure-cli,npm,0.5.0,2024-10-15 13:20:00,0.54,,False
+langchain-x,npm,2.1.0,2024-10-16 07:00:00,0.54,,False
+openai-tools,pypi,1.0.0,2024-10-15 14:30:00,0.54,,False
+langchain-sdk,pypi,0.1.0,2024-10-15 16:45:00,0.54,,False
+copilot-x,pypi,2.0.0,2024-10-16 08:00:00,0.54,,False
+huggingface-cli,pypi,0.2.0,2024-10-16 10:30:00,0.54,,False
+requests2,pypi,0.0.1,2024-10-15 12:00:00,0.48,,False
+numpy2,pypi,1.0.0,2024-10-16 09:15:00,0.48,,False
