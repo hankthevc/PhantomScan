@@ -1,0 +1,152 @@
+| ======================================
+| PhantomScan Hunt Pack - Splunk SPL
+| Detects installations of suspicious packages
+| ======================================
+
+
+| ======================================
+| Hunt 1: Pip/npm installs vs radar feed
+| ======================================
+
+| Step 1: Extract package installations from command lines
+(index=endpoint OR sourcetype=process)
+earliest=-7d
+(CommandLine="*pip install*" OR CommandLine="*pip3 install*" OR CommandLine="*npm install*" OR CommandLine="*npm i *")
+| rex field=CommandLine "pip(?:3)?\s+install\s+(?<package_name>[a-zA-Z0-9_-]+)"
+| rex field=CommandLine "npm\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| eval ecosystem=case(
+    match(CommandLine, "pip"), "pypi",
+    match(CommandLine, "npm"), "npm",
+    1=1, "unknown"
+)
+| where isnotnull(package_name)
+| eval package_name=trim(package_name)
+
+| Step 2: Lookup against radar feed CSV
+| inputlookup radar_feed.csv
+| eval package_name=trim(name)
+| join type=inner package_name ecosystem [
+    search (index=endpoint OR sourcetype=process)
+    (CommandLine="*pip install*" OR CommandLine="*npm install*")
+    | rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+    | eval ecosystem=if(match(CommandLine, "pip"), "pypi", "npm")
+    | eval package_name=trim(package_name)
+]
+
+| Step 3: Display results sorted by risk score
+| table _time host user ecosystem package_name score CommandLine
+| sort - score _time
+| rename score as RiskScore, package_name as PackageName, ecosystem as Ecosystem
+
+
+| ======================================
+| Hunt 2: Demo with sample data
+| ======================================
+
+| Load sample process data
+| inputlookup device_procs.csv
+
+| Extract package names
+| rex field=ProcessCommandLine "pip(?:3)?\s+install\s+(?<package_name>[a-zA-Z0-9_-]+)"
+| rex field=ProcessCommandLine "npm\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| eval ecosystem=case(
+    match(ProcessCommandLine, "pip"), "pypi",
+    match(ProcessCommandLine, "npm"), "npm",
+    1=1, "unknown"
+)
+| where isnotnull(package_name)
+| table Timestamp DeviceName AccountName ProcessCommandLine package_name ecosystem
+| sort - Timestamp
+
+
+| ======================================
+| Hunt 3: Suspicious install patterns
+| ======================================
+
+| Detect rapid installation of multiple packages
+(index=endpoint OR sourcetype=process)
+earliest=-24h
+(CommandLine="*pip install*" OR CommandLine="*npm install*")
+| rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| where isnotnull(package_name)
+| bin _time span=5m
+| stats 
+    count as install_count,
+    values(package_name) as packages,
+    values(CommandLine) as commands
+    by _time host user
+| where install_count >= 5
+| sort - install_count
+| table _time host user install_count packages commands
+
+
+| ======================================
+| Hunt 4: Installations from unusual users
+| ======================================
+
+| Find one-time installations (potential compromised accounts)
+(index=endpoint OR sourcetype=process)
+earliest=-7d
+(CommandLine="*pip install*" OR CommandLine="*npm install*")
+| rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| where isnotnull(package_name)
+| stats 
+    min(_time) as first_seen,
+    max(_time) as last_seen,
+    count as install_count,
+    dc(host) as device_count
+    by user package_name
+| where install_count=1 AND device_count=1
+| sort - last_seen
+| table user package_name first_seen last_seen install_count device_count
+
+
+| ======================================
+| Hunt 5: Brand prefix patterns
+| ======================================
+
+| Detect packages with suspicious brand prefixes
+(index=endpoint OR sourcetype=process)
+earliest=-7d
+(CommandLine="*pip install*" OR CommandLine="*npm install*")
+| rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| where isnotnull(package_name)
+| where match(package_name, "^(openai|langchain|huggingface|microsoft|azure|copilot|anthropic)")
+| table _time host user package_name CommandLine
+| sort - _time
+
+
+| ======================================
+| Hunt 6: Packages with version 2 suffix
+| ======================================
+
+| Detect potential typosquats ending in "2" (e.g., requests2)
+(index=endpoint OR sourcetype=process)
+earliest=-7d
+(CommandLine="*pip install*" OR CommandLine="*npm install*")
+| rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_-]+)"
+| where isnotnull(package_name)
+| where match(package_name, "2$")
+| table _time host user package_name CommandLine
+| sort - _time
+
+
+| ======================================
+| Hunt 7: Dashboard summary
+| ======================================
+
+| Create a dashboard showing install activity
+(index=endpoint OR sourcetype=process)
+earliest=-7d
+(CommandLine="*pip install*" OR CommandLine="*npm install*")
+| rex field=CommandLine "(?:pip|npm)\s+(?:install|i)\s+(?<package_name>[a-zA-Z0-9_@/-]+)"
+| eval ecosystem=if(match(CommandLine, "pip"), "PyPI", "npm")
+| where isnotnull(package_name)
+| stats 
+    count as total_installs,
+    dc(package_name) as unique_packages,
+    dc(user) as unique_users,
+    dc(host) as unique_hosts
+    by ecosystem
+| eval avg_installs_per_package=round(total_installs/unique_packages, 2)
+| table ecosystem total_installs unique_packages unique_users unique_hosts avg_installs_per_package

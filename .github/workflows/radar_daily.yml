@@ -1,0 +1,134 @@
+name: PhantomScan Daily Radar
+
+on:
+  # Run daily at 03:23 UTC
+  schedule:
+    - cron: '23 3 * * *'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+  # Run on push to main (for testing)
+  push:
+    branches:
+      - main
+    paths:
+      - 'radar/**'
+      - 'config/**'
+      - '.github/workflows/radar_daily.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  run-radar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Create data directories
+        run: |
+          mkdir -p data/raw
+          mkdir -p data/processed
+          mkdir -p data/feeds
+          mkdir -p data/samples
+
+      - name: Run radar pipeline
+        run: |
+          radar run-all --limit 400
+        env:
+          RADAR_OFFLINE: ${{ secrets.RADAR_OFFLINE || '0' }}
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code data/feeds/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push feed artifacts
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'PhantomScan Bot'
+          git config --global user.email 'bot@phantom-scan.local'
+
+          # Get today's date
+          DATE=$(date +%Y-%m-%d)
+
+          # Add feed files
+          git add data/feeds/$DATE/
+
+          # Commit
+          git commit -m "chore: daily radar feed for $DATE [skip ci]"
+
+          # Push
+          git push
+
+      - name: No changes
+        if: steps.git-check.outputs.changed != 'true'
+        run: |
+          echo "No changes to feed data, skipping commit"
+
+      - name: Upload feed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phantom-feed-${{ github.run_number }}
+          path: data/feeds/
+          retention-days: 30
+
+      - name: Create summary
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          echo "## PhantomScan Daily Radar - $DATE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "data/feeds/$DATE/topN.json" ]; then
+            COUNT=$(jq '. | length' "data/feeds/$DATE/topN.json")
+            echo "✅ Generated feed with **$COUNT** candidates" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Show top 5
+            echo "### Top 5 Suspicious Packages" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Package | Ecosystem | Score |" >> $GITHUB_STEP_SUMMARY
+            echo "|---------|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+
+            jq -r '.[:5] | .[] | "| \(.name) | \(.ecosystem) | \(.score) |"' "data/feeds/$DATE/topN.json" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No feed generated for $DATE" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install ruff black mypy
+
+      - name: Run ruff
+        run: ruff check radar/ webapp/ api/ tests/ || true
+
+      - name: Run black
+        run: black --check radar/ webapp/ api/ tests/ || true
+
+      - name: Run mypy
+        run: mypy radar/ webapp/ api/ || true

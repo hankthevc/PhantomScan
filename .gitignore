@@ -16,6 +16,8 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -27,35 +29,51 @@ env/
 ENV/
 .venv
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.DS_Store
 
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
+.hypothesis/
+
+# MyPy
 .mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
 .ruff_cache/
-
-# Data (keep structure, ignore contents)
-data/raw/*
-data/processed/*
-data/feeds/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
-!data/feeds/.gitkeep
-!data/feeds/*/
-!data/samples/
-
-# Logs
-*.log
 
 # Environment
 .env
 .env.local
+
+# DuckDB
+*.duckdb
+*.duckdb.wal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+temp/
+tmp/
+
+# Data (keep structure, ignore large data files)
+data/raw/*/*.jsonl
+data/processed/*/*.parquet
+# Keep sample data and feeds for git
+!data/samples/*.jsonl
+!data/samples/*.csv
+!data/feeds/**/*.json
+!data/feeds/**/*.md

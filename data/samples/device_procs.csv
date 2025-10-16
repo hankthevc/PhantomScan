@@ -1,0 +1,21 @@
+Timestamp,DeviceName,AccountName,ProcessCommandLine
+2024-10-16T08:15:23Z,WORKSTATION-DEV-01,alice@example.com,pip install requests
+2024-10-16T08:17:45Z,WORKSTATION-DEV-01,alice@example.com,pip install requests2
+2024-10-16T08:20:12Z,LAPTOP-SEC-03,bob@example.com,npm install lodash
+2024-10-16T08:22:30Z,LAPTOP-SEC-03,bob@example.com,npm install openai-tools
+2024-10-16T09:05:18Z,SERVER-PROD-12,service@example.com,pip3 install pandas
+2024-10-16T09:10:44Z,WORKSTATION-QA-05,charlie@example.com,pip install langchain-sdk
+2024-10-16T09:15:22Z,LAPTOP-HR-02,diana@example.com,npm i express
+2024-10-16T09:18:09Z,LAPTOP-HR-02,diana@example.com,npm install huggingface-cli
+2024-10-16T10:30:55Z,WORKSTATION-DEV-08,eve@example.com,pip install numpy
+2024-10-16T10:35:12Z,WORKSTATION-DEV-08,eve@example.com,pip install numpy2
+2024-10-16T11:02:33Z,SERVER-BUILD-01,jenkins@example.com,pip install pytest
+2024-10-16T11:45:18Z,LAPTOP-SALES-04,frank@example.com,npm install axios
+2024-10-16T12:12:07Z,WORKSTATION-DEV-02,alice@example.com,pip install tensorflow
+2024-10-16T12:15:44Z,WORKSTATION-DEV-02,alice@example.com,pip install copilot-x
+2024-10-16T13:20:29Z,LAPTOP-SEC-03,bob@example.com,npm install @azure/identity
+2024-10-16T13:25:56Z,LAPTOP-SEC-03,bob@example.com,npm install microsoft-utils
+2024-10-16T14:08:11Z,WORKSTATION-QA-06,george@example.com,pip3 install beautifulsoup4
+2024-10-16T14:40:33Z,LAPTOP-DEV-09,helen@example.com,npm i webpack
+2024-10-16T15:15:47Z,WORKSTATION-DEV-03,ivan@example.com,pip install flask
+2024-10-16T15:18:22Z,WORKSTATION-DEV-03,ivan@example.com,pip install flask-cli

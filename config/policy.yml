@@ -1,0 +1,120 @@
+# PhantomScan Policy Configuration
+# Adjust these values to tune scoring behavior and operational parameters
+
+# Scoring Weights (must sum to 1.0)
+weights:
+  name_suspicion: 0.30
+  newness: 0.25
+  repo_missing: 0.15
+  maintainer_reputation: 0.15
+  script_risk: 0.15
+
+# Heuristic Parameters
+heuristics:
+  # Days since creation to consider "new" (1.0 score at 0 days, 0.0 at this threshold)
+  new_package_days: 30
+
+  # Brand/API names that trigger suspicion when used as prefixes
+  suspicious_prefixes:
+    - openai
+    - huggingface
+    - microsoft
+    - azure
+    - copilot
+    - langchain
+    - anthropic
+    - cohere
+    - replicate
+    - stability
+    - midjourney
+
+  # Suffix patterns that often indicate slopsquatting
+  suspicious_suffixes:
+    - "-cli"
+    - "-tools"
+    - "-utils"
+    - "-sdk"
+    - "-x"
+    - "2"
+    - "-py"
+    - "-python"
+    - "-js"
+    - "-node"
+
+  # Canonical packages to check for close similarity (fuzzy matching)
+  canonical_packages:
+    pypi:
+      - requests
+      - numpy
+      - pandas
+      - torch
+      - tensorflow
+      - scikit-learn
+      - matplotlib
+      - pillow
+      - flask
+      - django
+      - fastapi
+      - pytest
+      - black
+      - ruff
+    npm:
+      - react
+      - vue
+      - angular
+      - express
+      - lodash
+      - webpack
+      - axios
+      - moment
+      - typescript
+      - next
+      - eslint
+      - prettier
+
+  # Fuzzy match threshold (0-100, lower is more similar)
+  fuzzy_threshold: 15
+
+# Feed Generation
+feed:
+  # Number of top candidates to include in daily feed
+  top_n: 50
+  # Minimum score to include (0.0 - 1.0)
+  min_score: 0.3
+
+# Data Sources
+sources:
+  pypi:
+    enabled: true
+    # RSS feeds
+    rss_packages: "https://pypi.org/rss/packages.xml"
+    rss_updates: "https://pypi.org/rss/updates.xml"
+    # JSON API template
+    json_api: "https://pypi.org/pypi/{name}/json"
+    # Request timeout (seconds)
+    timeout: 10
+    # Retry attempts
+    retries: 3
+
+  npm:
+    enabled: true
+    # Changes feed
+    changes_feed: "https://replicate.npmjs.com/_changes"
+    # Fetch limit per run
+    limit: 1000
+    timeout: 10
+    retries: 3
+
+# Network Configuration
+network:
+  # User-Agent for API requests
+  user_agent: "PhantomScan/0.1.0 (security research; +https://github.com/example/phantom-dependency-radar)"
+  # Connection pool size
+  pool_size: 10
+
+# Storage
+storage:
+  # DuckDB database file
+  duckdb_path: "data/radar.duckdb"
+  # Retain history for N days (0 = indefinite)
+  retention_days: 90
