@@ -1,6 +1,6 @@
 """Command-line interface for PhantomScan."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import typer
@@ -34,7 +34,7 @@ def fetch(
     console.print("[bold blue]🔭 Fetching packages...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     candidates = fetch_packages(ecosystems, limit, date)
     console.print(f"[bold green]✓ Fetched {len(candidates)} packages for {date}[/bold green]")
@@ -50,7 +50,7 @@ def score(
     console.print("[bold blue]🧮 Scoring candidates...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     scored = score_candidates(date)
     console.print(f"[bold green]✓ Scored {len(scored)} candidates for {date}[/bold green]")
@@ -67,7 +67,7 @@ def feed(
     console.print("[bold blue]📊 Generating feed...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     generate_feed(date, top)
     console.print(f"[bold green]✓ Generated feed for {date}[/bold green]")
@@ -85,7 +85,7 @@ def run_all(
     """Run complete pipeline: fetch → score → feed."""
     import os
     
-    date = datetime.utcnow().strftime("%Y-%m-%d")
+    date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     offline_mode = os.getenv("RADAR_OFFLINE", "0") == "1"
     
     if offline_mode:

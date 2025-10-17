@@ -19,17 +19,69 @@ st.markdown(
         font-weight: bold;
         text-align: center;
         margin-bottom: 1rem;
+        background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     .subtitle {
         text-align: center;
         color: #666;
         margin-bottom: 2rem;
+        font-size: 1.2rem;
     }
     .metric-card {
         background-color: #f0f2f6;
         padding: 1rem;
         border-radius: 0.5rem;
         margin: 0.5rem 0;
+    }
+    .risk-badge-low {
+        background-color: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-medium {
+        background-color: #ffc107;
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-high {
+        background-color: #dc3545;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-critical {
+        background-color: #6f1313;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .ecosystem-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    .ecosystem-pypi {
+        background-color: #3776ab;
+        color: white;
+    }
+    .ecosystem-npm {
+        background-color: #cb3837;
+        color: white;
     }
     </style>
     """,

@@ -1,6 +1,6 @@
 """Generate top-N threat intelligence feeds."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -20,7 +20,7 @@ def generate_feed(date_str: str | None = None, top_n: int | None = None) -> None
         top_n: Number of top candidates (default: from policy)
     """
     if date_str is None:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     policy = load_policy()
     if top_n is None:

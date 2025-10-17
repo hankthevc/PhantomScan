@@ -1,6 +1,6 @@
 """Fetch packages from data sources."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from rich.console import Console
 from rich.progress import track
@@ -29,7 +29,7 @@ def fetch_packages(
     import os
     
     if date_str is None:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     all_candidates = []
     sources = []

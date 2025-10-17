@@ -1,6 +1,6 @@
 """FastAPI service for PhantomScan."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -70,7 +70,7 @@ async def health() -> HealthResponse:
     return HealthResponse(
         ok=True,
         version="0.1.0",
-        timestamp=datetime.utcnow().isoformat(),
+        timestamp=datetime.now(timezone.utc).isoformat(),
     )
 
 
@@ -145,7 +145,7 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
         if request.created_at:
             created_at = datetime.fromisoformat(request.created_at.replace("Z", "+00:00"))
         else:
-            created_at = datetime.utcnow()
+            created_at = datetime.now(timezone.utc)
 
         # Create candidate
         candidate = PackageCandidate(
@@ -199,7 +199,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "name": request.name,
             "version": request.version,
             "score": request.score,
-            "created_at": request.created_at or datetime.utcnow().isoformat(),
+            "created_at": request.created_at or datetime.now(timezone.utc).isoformat(),
             "homepage": request.homepage,
             "repository": request.repository,
             "maintainers_count": request.maintainers_count,
@@ -208,7 +208,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "reasons": request.reasons,
         }
 
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         output_path = generate_casefile(pkg_data, date_str)
 
         # Read generated content

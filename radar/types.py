@@ -1,6 +1,6 @@
 """Core data types for PhantomScan."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
@@ -46,7 +46,7 @@ class ScoredCandidate(BaseModel):
     candidate: PackageCandidate
     score: float = Field(ge=0.0, le=1.0)
     breakdown: ScoreBreakdown
-    scored_at: datetime = Field(default_factory=datetime.utcnow)
+    scored_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class PolicyConfig(BaseModel):

@@ -6,6 +6,7 @@ import streamlit as st
 
 from radar.reports.casefile import generate_casefile
 from radar.utils import load_json
+from webapp.utils import get_risk_level
 
 st.set_page_config(page_title="Casefile Generator", page_icon="📄", layout="wide")
 
@@ -104,10 +105,12 @@ if selected_packages:
 
     preview_data = []
     for pkg in selected_packages[:10]:  # Show max 10 in preview
+        level, emoji, _ = get_risk_level(pkg['score'])
         preview_data.append(
             {
                 "Name": pkg["name"],
-                "Ecosystem": pkg["ecosystem"],
+                "Ecosystem": pkg["ecosystem"].upper(),
+                "Risk": f"{emoji} {level}",
                 "Score": f"{pkg['score']:.2f}",
                 "Published": pkg["created_at"][:10],
             }
