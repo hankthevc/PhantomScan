@@ -1,6 +1,6 @@
 """Casefile generation for investigation."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -25,7 +25,7 @@ def generate_casefile(
         Path to generated casefile
     """
     if date_str is None:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     if output_dir is None:
         output_dir = Path("data/feeds") / date_str
@@ -40,7 +40,7 @@ def generate_casefile(
     markdown = template.render(
         pkg=pkg_data,
         date=date_str,
-        now=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        now=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
     )
 
     # Save casefile

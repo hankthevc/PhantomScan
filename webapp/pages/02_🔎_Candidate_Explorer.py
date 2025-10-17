@@ -7,8 +7,65 @@ import streamlit as st
 
 from radar.reports.casefile import generate_casefile
 from radar.utils import load_json
+from webapp.utils import get_risk_badge, get_ecosystem_badge, get_risk_level, format_score_display
 
 st.set_page_config(page_title="Candidate Explorer", page_icon="🔎", layout="wide")
+
+# Add custom CSS
+st.markdown(
+    """
+    <style>
+    .risk-badge-low {
+        background-color: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-medium {
+        background-color: #ffc107;
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-high {
+        background-color: #dc3545;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-critical {
+        background-color: #6f1313;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .ecosystem-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    .ecosystem-pypi {
+        background-color: #3776ab;
+        color: white;
+    }
+    .ecosystem-npm {
+        background-color: #cb3837;
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.title("🔎 Candidate Explorer")
 st.markdown("Search and investigate individual package candidates")
@@ -88,10 +145,12 @@ if filtered:
     # Create a dataframe for the table view
     table_data = []
     for pkg in filtered:
+        level, emoji, _ = get_risk_level(pkg['score'])
         table_data.append(
             {
                 "Name": pkg["name"],
-                "Ecosystem": pkg["ecosystem"],
+                "Ecosystem": pkg["ecosystem"].upper(),
+                "Risk": f"{emoji} {level}",
                 "Score": f"{pkg['score']:.2f}",
                 "Published": pkg["created_at"][:10],
                 "Feed Date": pkg["feed_date"],
@@ -121,22 +180,38 @@ if filtered:
         pkg = next((p for p in filtered if p["name"] == selected_name), None)
 
         if pkg:
+            # Header with badges
+            col_h1, col_h2, col_h3 = st.columns([2, 1, 1])
+            
+            with col_h1:
+                st.markdown(f"## `{pkg['name']}`")
+            
+            with col_h2:
+                st.markdown(get_ecosystem_badge(pkg['ecosystem']), unsafe_allow_html=True)
+            
+            with col_h3:
+                st.markdown(get_risk_badge(pkg['score']), unsafe_allow_html=True)
+            
+            st.markdown("---")
+            
             col1, col2 = st.columns([2, 1])
 
             with col1:
-                st.markdown(f"## `{pkg['name']}`")
-                st.markdown(f"**Ecosystem**: {pkg['ecosystem'].upper()}")
                 st.markdown(f"**Version**: {pkg['version']}")
                 st.markdown(f"**Published**: {pkg['created_at'][:10]}")
                 st.markdown(f"**Detected**: {pkg['feed_date']}")
-
+                st.markdown(f"**Risk Score**: {format_score_display(pkg['score'])}")
+                
                 # Risk assessment
-                if pkg["score"] >= 0.7:
-                    st.error(f"🔴 HIGH RISK - Score: {pkg['score']:.2f}")
-                elif pkg["score"] >= 0.5:
-                    st.warning(f"🟡 MEDIUM RISK - Score: {pkg['score']:.2f}")
+                level, emoji, _ = get_risk_level(pkg["score"])
+                if level == "CRITICAL":
+                    st.error(f"{emoji} {level} RISK")
+                elif level == "HIGH":
+                    st.error(f"{emoji} {level} RISK")
+                elif level == "MEDIUM":
+                    st.warning(f"{emoji} {level} RISK")
                 else:
-                    st.info(f"🟢 LOW RISK - Score: {pkg['score']:.2f}")
+                    st.success(f"{emoji} {level} RISK")
 
                 # Risk factors
                 st.markdown("**⚠️ Risk Factors**:")

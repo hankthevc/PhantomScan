@@ -1,6 +1,6 @@
 """Score package candidates for risk."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pandas as pd
 from rich.console import Console
@@ -23,7 +23,7 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
         List of scored candidates
     """
     if date_str is None:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     policy = load_policy()
     scorer = PackageScorer(policy)
@@ -56,7 +56,7 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
                 candidate=candidate,
                 score=total_score,
                 breakdown=breakdown,
-                scored_at=datetime.utcnow(),
+                scored_at=datetime.now(timezone.utc),
             )
         )
 

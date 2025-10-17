@@ -2,15 +2,72 @@
 
 import os
 import subprocess
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
 from radar.utils import load_json
+from webapp.utils import get_risk_badge, get_ecosystem_badge, get_risk_level, format_score_display
 
 st.set_page_config(page_title="Live Feed", page_icon="📈", layout="wide")
+
+# Add custom CSS (same as main app)
+st.markdown(
+    """
+    <style>
+    .risk-badge-low {
+        background-color: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-medium {
+        background-color: #ffc107;
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-high {
+        background-color: #dc3545;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .risk-badge-critical {
+        background-color: #6f1313;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .ecosystem-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    .ecosystem-pypi {
+        background-color: #3776ab;
+        color: white;
+    }
+    .ecosystem-npm {
+        background-color: #cb3837;
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.title("📈 Live Feed")
 st.markdown("Browse suspicious packages detected by PhantomScan")
@@ -43,7 +100,7 @@ def get_available_dates() -> list[str]:
 
 
 # Check for today's feed
-today = datetime.utcnow().strftime("%Y-%m-%d")
+today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 offline_mode = os.getenv("RADAR_OFFLINE", "0") == "1"
 
 # Data source banner
@@ -174,18 +231,34 @@ st.markdown("---")
 
 # Display packages
 for idx, pkg in enumerate(filtered_data, 1):
+    # Get risk level info
+    level, emoji, css_class = get_risk_level(pkg['score'])
+    
+    # Create expander with color-coded header
     with st.expander(
-        f"#{idx} {pkg['name']} ({pkg['ecosystem']}) - Score: {pkg['score']:.2f}",
+        f"#{idx} {pkg['name']} - {emoji} {level} ({pkg['score']:.2f})",
         expanded=idx <= 3,
     ):
+        # Header with badges
+        col_header1, col_header2, col_header3 = st.columns([2, 1, 1])
+        
+        with col_header1:
+            st.markdown(f"### `{pkg['name']}`")
+        
+        with col_header2:
+            st.markdown(get_ecosystem_badge(pkg['ecosystem']), unsafe_allow_html=True)
+        
+        with col_header3:
+            st.markdown(get_risk_badge(pkg['score']), unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
         col1, col2 = st.columns([2, 1])
 
         with col1:
-            st.markdown(f"**Package**: `{pkg['name']}`")
             st.markdown(f"**Version**: {pkg['version']}")
-            st.markdown(f"**Ecosystem**: {pkg['ecosystem'].upper()}")
             st.markdown(f"**Published**: {pkg['created_at'][:10]}")
-            st.markdown(f"**Risk Score**: {pkg['score']:.2f} / 1.00")
+            st.markdown(f"**Risk Score**: {format_score_display(pkg['score'])}")
 
             # Risk factors
             st.markdown("**⚠️ Risk Factors**:")

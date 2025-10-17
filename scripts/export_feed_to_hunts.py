@@ -2,7 +2,7 @@
 """Export today's feed to CSV for hunt packs (Splunk/KQL)."""
 
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -11,7 +11,7 @@ import pandas as pd
 def main() -> None:
     """Export feed to hunts CSV."""
     # Get today's date
-    today = datetime.utcnow().strftime("%Y-%m-%d")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
     # Look for today's feed, or use the latest available
     feed_path = Path(f"data/feeds/{today}/topN.json")
