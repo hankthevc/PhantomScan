@@ -3,16 +3,43 @@
 
 # Scoring Weights (must sum to 1.0)
 weights:
-  name_suspicion: 0.30
-  newness: 0.25
-  repo_missing: 0.15
-  maintainer_reputation: 0.15
-  script_risk: 0.15
+  name_suspicion: 0.16
+  known_hallucination: 0.16
+  content_risk: 0.18
+  script_risk: 0.12
+  newness: 0.10
+  repo_missing: 0.07
+  maintainer_reputation: 0.07
+  docs_absence: 0.05
+  repo_asymmetry: 0.03
+  download_anomaly: 0.03
+  provenance_risk: 0.03
+  version_flip: 0.03
 
 # Heuristic Parameters
 heuristics:
   # Days since creation to consider "new" (1.0 score at 0 days, 0.0 at this threshold)
   new_package_days: 30
+  
+  # Enrichment API endpoints and toggles
+  lookups:
+    npm_downloads_api: "https://api.npmjs.org/downloads/point/last-week/{name}"
+    npm_packument: "https://registry.npmjs.org/{name}"
+    osv_api: "https://api.osv.dev/v1/query"
+    github_api: "https://api.github.com/repos/{owner}/{repo}"
+    enable_github: true
+    enable_osv: true
+    enable_npm_downloads: true
+  
+  # Thresholds for anomaly detection
+  thresholds:
+    download_spike_ratio: 5.0  # actual/baseline ratio
+    repo_new_days: 14
+    version_flip_window: 30  # days
+  
+  # Corpus files
+  corpus:
+    hallucinations_file: "config/hallucinations.yml"
 
   # Brand/API names that trigger suspicion when used as prefixes
   suspicious_prefixes:
