@@ -1,0 +1,56 @@
+# Known Hallucinated Package Names
+# These are commonly hallucinated package names by LLMs that don't actually exist
+# or names that are frequently confused/mistyped
+
+# Exact match names (case-insensitive)
+exact_matches:
+  # AI/ML hallucinations
+  - openai-python
+  - openai-api-client
+  - langchain-community
+  - anthropic-python
+  - cohere-python
+  - replicate-python
+  - huggingface-transformers
+  - torch-vision
+  - tensorflow-gpu
+  - scikit-image
+  
+  # Web framework hallucinations
+  - flask-api
+  - django-rest
+  - fastapi-utils
+  - express-server
+  - next-router
+  
+  # Common utility hallucinations
+  - requests-async
+  - requests-session
+  - pandas-utils
+  - numpy-scipy
+  - matplotlib-pyplot
+  - python-dotenv-config
+  - node-fetch-retry
+  - lodash-utils
+  - axios-retry-interceptor
+  
+  # CLI/DevOps hallucinations
+  - aws-cli-tools
+  - kubectl-client
+  - docker-compose-tools
+  - terraform-cli
+
+# Regex patterns to match hallucination patterns
+regex_patterns:
+  # Unofficial wrappers/clients with typical suffixes
+  - "^(openai|anthropic|cohere|replicate)-(wrapper|client|sdk|api)$"
+  - "^(aws|azure|gcp)-(utils|tools|helpers)$"
+  - "^python-(.*)-client$"
+  - "^node-(.*)-client$"
+  
+  # Version/variant confusion
+  - "^(requests|numpy|pandas|flask|django)[0-9]+$"
+  - "^(react|vue|angular)-v[0-9]+$"
+  
+  # Hyphenated variants of single-word packages
+  - "^(request|panda|tensor-flow|scikit-learn|beautiful-soup)$"

@@ -37,6 +37,14 @@ class ScoreBreakdown(BaseModel):
     repo_missing: float = Field(ge=0.0, le=1.0)
     maintainer_reputation: float = Field(ge=0.0, le=1.0)
     script_risk: float = Field(ge=0.0, le=1.0)
+    # New extended analysis fields
+    known_hallucination: float = Field(default=0.0, ge=0.0, le=1.0)
+    content_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    docs_absence: float = Field(default=0.0, ge=0.0, le=1.0)
+    provenance_risk: float = Field(default=0.0, ge=0.0, le=1.0)
+    repo_asymmetry: float = Field(default=0.0, ge=0.0, le=1.0)
+    download_anomaly: float = Field(default=0.0, ge=0.0, le=1.0)
+    version_flip: float = Field(default=0.0, ge=0.0, le=1.0)
     reasons: list[str] = Field(default_factory=list)
 
 
@@ -58,3 +66,6 @@ class PolicyConfig(BaseModel):
     sources: dict
     network: dict
     storage: dict
+    lookups: dict = Field(default_factory=dict)
+    thresholds: dict = Field(default_factory=dict)
+    corpus: dict = Field(default_factory=dict)

@@ -103,13 +103,22 @@ class NpmSource(PackageSource):
 
         # Check for install scripts in latest version
         has_install_scripts = False
+        latest_scripts = {}
         versions = doc.get("versions", {})
         if latest_version in versions:
             latest_pkg = versions[latest_version]
             scripts = latest_pkg.get("scripts", {})
             if isinstance(scripts, dict):
+                latest_scripts = scripts
                 dangerous_scripts = {"install", "preinstall", "postinstall"}
                 has_install_scripts = any(key in scripts for key in dangerous_scripts)
+
+        # Extract packument subset for enrichment
+        packument_head = {
+            "versions": doc.get("versions", {}),
+            "time": doc.get("time", {}),
+            "dist-tags": doc.get("dist-tags", {}),
+        }
 
         return PackageCandidate(
             ecosystem=Ecosystem.NPM,
@@ -121,7 +130,11 @@ class NpmSource(PackageSource):
             maintainers_count=maintainers_count,
             has_install_scripts=has_install_scripts,
             description=doc.get("description"),
-            raw_metadata=doc,
+            raw_metadata={
+                **doc,
+                "latest_scripts": latest_scripts,
+                "packument_head": packument_head,
+            },
         )
 
     def _load_offline_data(self, limit: int) -> list[PackageCandidate]:

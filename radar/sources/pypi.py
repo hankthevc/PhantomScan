@@ -130,6 +130,8 @@ class PyPISource(PackageSource):
                 repo_url = project_urls[key]
                 break
 
+        # Preserve full metadata for enrichment
+        # (already done via raw_metadata=data)
         return PackageCandidate(
             ecosystem=Ecosystem.PYPI,
             name=info.get("name", ""),
@@ -140,7 +142,7 @@ class PyPISource(PackageSource):
             maintainers_count=1,  # PyPI doesn't expose maintainer count easily
             has_install_scripts=False,  # Not applicable to PyPI
             description=info.get("summary"),
-            raw_metadata=data,
+            raw_metadata=data,  # Full JSON including info, releases, urls
         )
 
     def _load_offline_data(self, limit: int) -> list[PackageCandidate]:
