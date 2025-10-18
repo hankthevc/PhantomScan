@@ -27,10 +27,17 @@
 
 **Score Breakdown**:
 - Name Suspicion: {{ "%.2f"|format(pkg.breakdown.name_suspicion) }}
+- Known Hallucination: {{ "%.2f"|format(pkg.breakdown.known_hallucination|default(0.0)) }}
+- Content Risk: {{ "%.2f"|format(pkg.breakdown.content_risk|default(0.0)) }}
+- Script Risk: {{ "%.2f"|format(pkg.breakdown.script_risk) }}
 - Newness: {{ "%.2f"|format(pkg.breakdown.newness) }}
 - Repo Missing: {{ "%.2f"|format(pkg.breakdown.repo_missing) }}
 - Maintainer Reputation: {{ "%.2f"|format(pkg.breakdown.maintainer_reputation) }}
-- Script Risk: {{ "%.2f"|format(pkg.breakdown.script_risk) }}
+- Docs Absence: {{ "%.2f"|format(pkg.breakdown.docs_absence|default(0.0)) }}
+- Provenance Risk: {{ "%.2f"|format(pkg.breakdown.provenance_risk|default(0.0)) }}
+- Repo Asymmetry: {{ "%.2f"|format(pkg.breakdown.repo_asymmetry|default(0.0)) }}
+- Download Anomaly: {{ "%.2f"|format(pkg.breakdown.download_anomaly|default(0.0)) }}
+- Version Flip: {{ "%.2f"|format(pkg.breakdown.version_flip|default(0.0)) }}
 
 ---
 

@@ -24,20 +24,53 @@ make api
 
 ## 📊 Features
 
+### Core Detection
+- **Multi-Ecosystem Support**: Monitors PyPI (Python) and npm (JavaScript)
+- **12 Risk Signals**: Advanced heuristic scoring combining:
+  - **Name Analysis**: Fuzzy matching, suspicious patterns, known hallucinations
+  - **Content Risk**: Static analysis of scripts/artifacts (exec/eval detection)
+  - **Provenance**: npm attestation checks, package signatures
+  - **Reputation**: GitHub repo facts, OSV vulnerabilities, maintainer count
+  - **Anomalies**: Download spikes, version flips, repo asymmetry
+  - **Documentation**: Homepage/repo/docs presence
+- **Safer Alternatives**: Suggests canonical packages when near-misses detected
+
+### Interfaces
 - **Live Feed**: Browse top-N suspicious packages by date with detailed risk scoring
 - **Candidate Explorer**: Search and investigate individual packages with score breakdowns
+- **CLI Analysis**: `radar analyze` command for on-demand package investigation
+- **REST API**: Programmatic access to scoring, feeds, and alternatives
 - **Casefile Generator**: Create investigation reports in Markdown format
 - **Hunt Pack**: Pre-built queries for KQL (Azure Sentinel) and Splunk to detect installations
+
+### Operations
 - **Offline Mode**: Demo with seed data when network is unavailable
 - **Daily Automation**: GitHub Actions workflow to run daily and commit feed artifacts
+- **Enrichment Toggles**: Enable/disable GitHub, OSV, downloads APIs via policy
+- **Time-Bounded**: All external calls have configurable timeouts
+- **Backward Compatible**: New fields default to 0.0 for old data
 
 ## 🏗️ Architecture
 
-- **Data Sources**: PyPI RSS + JSON API, npm changes feed (no authentication required)
-- **Scoring Engine**: Multi-factor heuristics (name suspicion, newness, repo presence, maintainer count, install scripts)
+```
+Sources (PyPI/npm) → Enrichment (GitHub/OSV/Downloads) → Analysis (Script/Artifact Scan)
+    ↓                                                              ↓
+Storage (DuckDB/Parquet) ← Scoring Engine (12 weighted subscores) ←
+    ↓
+Feed Generator (Markdown/JSON + Alternatives)
+    ↓
+Consumers (Web UI, API, CLI, SIEM)
+```
+
+- **Data Sources**: PyPI RSS + JSON API, npm changes feed, npm provenance
+- **Enrichment**: GitHub repo facts, OSV vulnerabilities, npm downloads (optional)
+- **Analysis**: npm script content lint, PyPI artifact static scan, sdist↔wheel diff
+- **Scoring Engine**: 12 weighted subscores (0.0-1.0) → final risk score
+- **Suggestions**: RapidFuzz-based safer alternatives matching
 - **Storage**: Local files (JSONL/Parquet) + DuckDB for historical analysis
 - **UI**: Streamlit for interactive exploration
-- **API**: FastAPI for programmatic access
+- **API**: FastAPI for programmatic access + /alternatives endpoint
+- **CLI**: `radar analyze` for on-demand investigation
 - **Automation**: GitHub Actions for daily scheduling
 
 ## 🔍 Using the Hunt Pack

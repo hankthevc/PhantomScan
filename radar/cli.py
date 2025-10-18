@@ -143,6 +143,141 @@ def run_all(
 
 
 @app.command()
+def analyze(
+    ecosystem: Annotated[str, typer.Option("--ecosystem", "-e", help="Package ecosystem (pypi or npm)")],
+    name: Annotated[str, typer.Option("--name", "-n", help="Package name")],
+    show_alternatives: Annotated[bool, typer.Option("--alternatives", "-a", help="Show safer alternatives")] = True,
+) -> None:
+    """Analyze a specific package and show risk assessment."""
+    from radar.scoring.heuristics import PackageScorer
+    from radar.sources.npm import NpmSource
+    from radar.sources.pypi import PyPISource
+    from radar.suggestions.alternatives import suggest_alternatives
+    from radar.types import Ecosystem
+    from radar.utils import load_policy
+
+    console.print(f"[bold cyan]🔍 Analyzing {ecosystem}/{name}...[/bold cyan]\n")
+
+    try:
+        # Parse ecosystem
+        if ecosystem.lower() == "pypi":
+            eco = Ecosystem.PYPI
+            source = PyPISource()
+        elif ecosystem.lower() == "npm":
+            eco = Ecosystem.NPM
+            source = NpmSource()
+        else:
+            console.print(f"[red]❌ Invalid ecosystem: {ecosystem}[/red]")
+            console.print("[yellow]💡 Valid ecosystems: pypi, npm[/yellow]")
+            raise typer.Exit(code=1)
+
+        # Fetch package metadata
+        console.print(f"[blue]📦 Fetching metadata for {name}...[/blue]")
+        
+        # For now, we need to fetch from the source
+        # This is a simplified version - in production, we'd have a dedicated fetch method
+        if ecosystem.lower() == "pypi":
+            candidate = source._fetch_package_metadata(name)
+        elif ecosystem.lower() == "npm":
+            # For npm, we'd need to fetch the packument
+            import httpx
+            policy = load_policy()
+            url = f"https://registry.npmjs.org/{name}"
+            client = httpx.Client(timeout=10, follow_redirects=True)
+            response = client.get(url)
+            if response.status_code == 404:
+                console.print(f"[red]❌ Package not found: {name}[/red]")
+                raise typer.Exit(code=1)
+            response.raise_for_status()
+            doc = response.json()
+            candidate = source._parse_npm_doc(doc)
+            client.close()
+
+        if not candidate:
+            console.print(f"[red]❌ Failed to fetch package: {name}[/red]")
+            raise typer.Exit(code=1)
+
+        console.print(f"[green]✓ Fetched metadata[/green]\n")
+
+        # Score the package
+        console.print("[blue]🧮 Computing risk score...[/blue]")
+        policy = load_policy()
+        scorer = PackageScorer(policy)
+        breakdown = scorer.score(candidate)
+        total_score = scorer.compute_weighted_score(breakdown)
+        console.print(f"[green]✓ Computed score[/green]\n")
+
+        # Display results
+        console.print("=" * 60)
+        console.print(f"[bold]Package:[/bold] {candidate.name}")
+        console.print(f"[bold]Ecosystem:[/bold] {candidate.ecosystem.value}")
+        console.print(f"[bold]Version:[/bold] {candidate.version}")
+        console.print(f"[bold]Created:[/bold] {candidate.created_at.strftime('%Y-%m-%d')}")
+        console.print(f"[bold]Homepage:[/bold] {candidate.homepage or '❌ Not provided'}")
+        console.print(f"[bold]Repository:[/bold] {candidate.repository or '❌ Not provided'}")
+        console.print("=" * 60)
+
+        # Risk score with color coding
+        if total_score >= 0.7:
+            color = "red"
+            risk_level = "HIGH RISK"
+        elif total_score >= 0.4:
+            color = "yellow"
+            risk_level = "MEDIUM RISK"
+        else:
+            color = "green"
+            risk_level = "LOW RISK"
+
+        console.print(f"\n[bold {color}]🎯 RISK SCORE: {total_score:.2f} / 1.00 ({risk_level})[/bold {color}]\n")
+
+        # Score breakdown
+        console.print("[bold]📊 Score Breakdown:[/bold]")
+        console.print(f"  • Name Suspicion:        {breakdown.name_suspicion:.2f}")
+        console.print(f"  • Known Hallucination:   {breakdown.known_hallucination:.2f}")
+        console.print(f"  • Content Risk:          {breakdown.content_risk:.2f}")
+        console.print(f"  • Script Risk:           {breakdown.script_risk:.2f}")
+        console.print(f"  • Newness:               {breakdown.newness:.2f}")
+        console.print(f"  • Repository Missing:    {breakdown.repo_missing:.2f}")
+        console.print(f"  • Maintainer Reputation: {breakdown.maintainer_reputation:.2f}")
+        console.print(f"  • Docs Absence:          {breakdown.docs_absence:.2f}")
+        console.print(f"  • Provenance Risk:       {breakdown.provenance_risk:.2f}")
+        console.print(f"  • Repo Asymmetry:        {breakdown.repo_asymmetry:.2f}")
+        console.print(f"  • Download Anomaly:      {breakdown.download_anomaly:.2f}")
+        console.print(f"  • Version Flip:          {breakdown.version_flip:.2f}")
+
+        # Risk factors
+        if breakdown.reasons:
+            console.print(f"\n[bold]⚠️  Risk Factors ({len(breakdown.reasons)}):[/bold]")
+            for reason in breakdown.reasons:
+                console.print(f"  • {reason}")
+
+        # Safer alternatives
+        if show_alternatives:
+            console.print("\n[bold]💡 Safer Alternatives:[/bold]")
+            canonical_list = policy.heuristics.get("canonical_packages", {}).get(
+                candidate.ecosystem.value, []
+            )
+            alternatives = suggest_alternatives(candidate.name, candidate.ecosystem, canonical_list)
+            
+            if alternatives:
+                for alt_name, similarity in alternatives:
+                    console.print(f"  • {alt_name} (similarity: {similarity:.0f}%)")
+            else:
+                console.print("  [dim]No close alternatives found[/dim]")
+
+        console.print("\n" + "=" * 60)
+        source.close()
+
+    except KeyboardInterrupt:
+        console.print("\n[yellow]⚠️ Analysis interrupted by user[/yellow]")
+        raise typer.Exit(code=130)
+    
+    except Exception as e:
+        console.print(f"\n[red]❌ Analysis failed: {e}[/red]")
+        raise typer.Exit(code=1)
+
+
+@app.command()
 def version() -> None:
     """Show version information."""
     from radar import __version__
