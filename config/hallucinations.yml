@@ -1,0 +1,34 @@
+# Known Hallucination Corpus
+# This file contains package names that are commonly hallucinated by LLMs
+# or are known to be entirely fictitious/non-existent in registries
+
+# Exact match patterns (case-insensitive)
+exact:
+  - openai-python  # LLMs often suggest this instead of 'openai'
+  - langchain-core  # Hallucinated before it actually existed
+  - tensorflow-gpu  # Often suggested incorrectly (it's part of tensorflow)
+  - torch-cuda  # Doesn't exist as standalone
+  - requests-async  # Hallucinated alternative to httpx
+  - pandas-profiling  # Renamed to ydata-profiling
+  - sklearn  # Should be scikit-learn
+  - cv2  # Should be opencv-python
+  - beautifulsoup  # Should be beautifulsoup4
+  - PIL  # Should be Pillow
+  - yaml  # Should be PyYAML
+  - dateutil  # Should be python-dateutil
+  - crypto  # Ambiguous, should be cryptography or pycryptodome
+
+# Regex patterns for more complex matching
+# Use Python regex syntax
+patterns:
+  - '^openai-.*-sdk$'  # openai-chat-sdk, openai-api-sdk, etc.
+  - '^huggingface-.*-model$'  # huggingface-bert-model, etc.
+  - '^langchain-.*-loader$'  # langchain-pdf-loader, etc. (before they existed)
+  - '^anthropic-.*-api$'  # anthropic-claude-api, etc.
+  - '^cohere-.*-client$'  # cohere-generate-client, etc.
+  - '^.*-types-.*-types$'  # duplicate -types patterns
+  - '^@types/types-.*$'  # redundant types patterns (npm)
+  - '^.*-utils-utils$'  # duplicate -utils patterns
+  - '^.*-cli-cli$'  # duplicate -cli patterns
+  - '^react-hooks-.*-hook$'  # overly specific React hook names
+  - '^use-.*-hook$'  # redundant "hook" suffix for React hooks
