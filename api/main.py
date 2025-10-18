@@ -170,10 +170,17 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
             score=total_score,
             breakdown={
                 "name_suspicion": breakdown.name_suspicion,
+                "known_hallucination": breakdown.known_hallucination,
+                "content_risk": breakdown.content_risk,
+                "script_risk": breakdown.script_risk,
                 "newness": breakdown.newness,
                 "repo_missing": breakdown.repo_missing,
                 "maintainer_reputation": breakdown.maintainer_reputation,
-                "script_risk": breakdown.script_risk,
+                "docs_absence": breakdown.docs_absence,
+                "provenance_risk": breakdown.provenance_risk,
+                "repo_asymmetry": breakdown.repo_asymmetry,
+                "download_anomaly": breakdown.download_anomaly,
+                "version_flip": breakdown.version_flip,
             },
             reasons=breakdown.reasons,
         )
@@ -227,6 +234,48 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
         raise HTTPException(status_code=500, detail=f"Casefile generation failed: {str(e)}")
 
 
+@app.get("/alternatives")
+async def get_alternatives(ecosystem: str, name: str) -> JSONResponse:
+    """Get safer alternative package suggestions.
+
+    Args:
+        ecosystem: Package ecosystem (pypi or npm)
+        name: Package name to find alternatives for
+
+    Returns:
+        JSON with alternative suggestions
+    """
+    try:
+        from radar.suggestions.alternatives import suggest_alternatives
+        from radar.types import Ecosystem
+
+        # Parse ecosystem
+        if ecosystem.lower() == "pypi":
+            eco = Ecosystem.PYPI
+        elif ecosystem.lower() == "npm":
+            eco = Ecosystem.NPM
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid ecosystem: {ecosystem}")
+
+        # Get canonical list from policy
+        policy = load_policy()
+        canonical_list = policy.heuristics.get("canonical_packages", {}).get(ecosystem.lower(), [])
+
+        # Find alternatives
+        alternatives = suggest_alternatives(name, eco, canonical_list)
+
+        return JSONResponse(
+            content={
+                "ecosystem": ecosystem,
+                "name": name,
+                "alternatives": [{"name": alt[0], "similarity": alt[1]} for alt in alternatives],
+            }
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to find alternatives: {str(e)}")
+
+
 @app.get("/")
 async def root() -> dict:
     """Root endpoint with API information."""
@@ -238,6 +287,7 @@ async def root() -> dict:
             "feed": "/feed/{date} or /feed/latest",
             "score": "POST /score",
             "casefile": "POST /casefile",
+            "alternatives": "GET /alternatives?ecosystem=&name=",
         },
         "docs": "/docs",
     }
