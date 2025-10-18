@@ -1,7 +1,6 @@
 """Settings page - Configure policy and app settings."""
 
 import os
-from pathlib import Path
 
 import streamlit as st
 import yaml

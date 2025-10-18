@@ -1,8 +1,6 @@
 """Tests for data source parsing."""
 
-from datetime import datetime, timezone
 
-import pytest
 
 from radar.sources.npm import NpmSource
 from radar.sources.pypi import PyPISource
@@ -147,7 +145,7 @@ def test_npm_parse_doc_minimal() -> None:
     assert candidate is not None
     assert candidate.name == "minimal-pkg"
     assert candidate.version == "0.1.0"
-    assert candidate.maintainers_count == 1
+    assert candidate.maintainers_count == 0  # No maintainers in minimal doc
 
 
 def test_npm_parse_doc_invalid_name() -> None:

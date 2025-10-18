@@ -1,12 +1,15 @@
 """FastAPI service for PhantomScan."""
 
-from datetime import datetime
+import asyncio
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from radar.enrich.reputation import adjust_score_by_dependents, get_dependents_hint
+from radar.enrich.versions import analyze_version_history
 from radar.reports.casefile import generate_casefile
 from radar.scoring.heuristics import PackageScorer
 from radar.types import Ecosystem, PackageCandidate
@@ -70,7 +73,7 @@ async def health() -> HealthResponse:
     return HealthResponse(
         ok=True,
         version="0.1.0",
-        timestamp=datetime.utcnow().isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
     )
 
 
@@ -132,54 +135,98 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
     Returns:
         Score breakdown and reasons
     """
+    async def _score_with_enrichment() -> ScoreResponse:
+        try:
+            # Parse ecosystem
+            if request.ecosystem.lower() == "pypi":
+                ecosystem = Ecosystem.PYPI
+            elif request.ecosystem.lower() == "npm":
+                ecosystem = Ecosystem.NPM
+            else:
+                raise HTTPException(status_code=400, detail=f"Invalid ecosystem: {request.ecosystem}")
+
+            # Parse created_at
+            if request.created_at:
+                created_at = datetime.fromisoformat(request.created_at.replace("Z", "+00:00"))
+            else:
+                created_at = datetime.now(UTC)
+
+            # Create candidate
+            candidate = PackageCandidate(
+                ecosystem=ecosystem,
+                name=request.name,
+                version=request.version,
+                created_at=created_at,
+                homepage=request.homepage,
+                repository=request.repository,
+                maintainers_count=request.maintainers_count,
+                has_install_scripts=request.has_install_scripts,
+            )
+
+            # Score it
+            policy = load_policy()
+            scorer = PackageScorer(policy)
+
+            breakdown = scorer.score(candidate)
+
+            # Enrichment: Version flip analysis (PyPI only)
+            if ecosystem == Ecosystem.PYPI:
+                try:
+                    version_flip_score, version_flip_reasons = analyze_version_history(
+                        request.name,
+                        request.version,
+                        "pypi",
+                        policy,
+                    )
+                    breakdown.version_flip = version_flip_score
+                    breakdown.reasons.extend(version_flip_reasons)
+                except Exception as e:
+                    breakdown.reasons.append(f"Version analysis unavailable: {str(e)[:50]}")
+
+            # Enrichment: Dependents count (optional)
+            try:
+                dependents_count = get_dependents_hint(
+                    ecosystem.value,
+                    request.name,
+                    policy,
+                )
+                if dependents_count is not None:
+                    _adjustment, dep_reasons = adjust_score_by_dependents(dependents_count, policy)
+                    breakdown.reasons.extend(dep_reasons)
+                    # Note: We don't apply adjustment to total score here, just informational
+            except Exception:
+                # Silent failure for optional enrichment
+                pass
+
+            total_score = scorer.compute_weighted_score(breakdown)
+
+            return ScoreResponse(
+                score=total_score,
+                breakdown={
+                    "name_suspicion": breakdown.name_suspicion,
+                    "newness": breakdown.newness,
+                    "repo_missing": breakdown.repo_missing,
+                    "maintainer_reputation": breakdown.maintainer_reputation,
+                    "script_risk": breakdown.script_risk,
+                    "version_flip": breakdown.version_flip,
+                    "readme_plagiarism": breakdown.readme_plagiarism,
+                },
+                reasons=breakdown.reasons,
+            )
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Scoring failed: {e!s}") from e
+
+    # Apply timeout to prevent long-running requests
     try:
-        # Parse ecosystem
-        if request.ecosystem.lower() == "pypi":
-            ecosystem = Ecosystem.PYPI
-        elif request.ecosystem.lower() == "npm":
-            ecosystem = Ecosystem.NPM
-        else:
-            raise HTTPException(status_code=400, detail=f"Invalid ecosystem: {request.ecosystem}")
-
-        # Parse created_at
-        if request.created_at:
-            created_at = datetime.fromisoformat(request.created_at.replace("Z", "+00:00"))
-        else:
-            created_at = datetime.utcnow()
-
-        # Create candidate
-        candidate = PackageCandidate(
-            ecosystem=ecosystem,
-            name=request.name,
-            version=request.version,
-            created_at=created_at,
-            homepage=request.homepage,
-            repository=request.repository,
-            maintainers_count=request.maintainers_count,
-            has_install_scripts=request.has_install_scripts,
-        )
-
-        # Score it
-        policy = load_policy()
-        scorer = PackageScorer(policy)
-
-        breakdown = scorer.score(candidate)
-        total_score = scorer.compute_weighted_score(breakdown)
-
-        return ScoreResponse(
-            score=total_score,
-            breakdown={
-                "name_suspicion": breakdown.name_suspicion,
-                "newness": breakdown.newness,
-                "repo_missing": breakdown.repo_missing,
-                "maintainer_reputation": breakdown.maintainer_reputation,
-                "script_risk": breakdown.script_risk,
-            },
-            reasons=breakdown.reasons,
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Scoring failed: {str(e)}")
+        return await asyncio.wait_for(_score_with_enrichment(), timeout=8.0)
+    except TimeoutError as e:
+        raise HTTPException(
+            status_code=503,
+            detail="Scoring timeout - enrichment services may be overloaded"
+        ) from e
 
 
 @app.post("/casefile")
@@ -199,7 +246,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "name": request.name,
             "version": request.version,
             "score": request.score,
-            "created_at": request.created_at or datetime.utcnow().isoformat(),
+            "created_at": request.created_at or datetime.now(timezone.utc).isoformat(),
             "homepage": request.homepage,
             "repository": request.repository,
             "maintainers_count": request.maintainers_count,
@@ -208,7 +255,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "reasons": request.reasons,
         }
 
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         output_path = generate_casefile(pkg_data, date_str)
 
         # Read generated content
@@ -224,7 +271,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Casefile generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Casefile generation failed: {e!s}")
 
 
 @app.get("/")

@@ -1,0 +1,1102 @@
+[
+  {
+    "ecosystem": "npm",
+    "name": "mcp-2-cli",
+    "version": "0.0.1",
+    "created_at": "2025-10-18T14:56:48.012000",
+    "score": 0.73,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806441"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "kcleaner-py",
+    "version": "0.2.1",
+    "created_at": "2025-10-18T12:57:53.792428",
+    "score": 0.655,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/skye-cyber/kcleaner",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-py'\",\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807734"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "install-k2",
+    "version": "0.0.1",
+    "created_at": "2025-10-18T12:19:19.748620",
+    "score": 0.655,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/install-k2/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '2'\",\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807768"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "dotflow-py",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T12:19:38.196886",
+    "score": 0.655,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/dotflow-py/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-py'\",\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807779"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "ogc-todo-cli",
+    "version": "1.0.2",
+    "created_at": "2025-10-14T16:13:03.139052",
+    "score": 0.63,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.9,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/ogc-todo-cli/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Only 3 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806610"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "botapi-py",
+    "version": "1.2.1",
+    "created_at": "2025-10-13T15:31:29.263868",
+    "score": 0.6216666666666667,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.8666666666666667,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/botapi-py/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-py'\",\"Only 4 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806701"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "ry-pg-utils",
+    "version": "2.0.7",
+    "created_at": "2025-10-11T16:13:25.020310",
+    "score": 0.605,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.8,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/ry-pg-utils/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-utils'\",\"Only 6 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807678"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "quickship-cli",
+    "version": "0.5.6",
+    "created_at": "2025-10-18T11:13:10.087000",
+    "score": 0.58,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/SeifElkadyy/QuickShip-CLI#readme",
+    "repository": "git+https://github.com/SeifElkadyy/QuickShip-CLI.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806025"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "datemath-cli",
+    "version": "1.6.1",
+    "created_at": "2025-10-18T02:56:03.011000",
+    "score": 0.58,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/ahmadawais/datemath-cli#readme",
+    "repository": "git+https://github.com/ahmadawais/datemath-cli.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806097"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "veris-memory-mcp-sdk",
+    "version": "1.1.0",
+    "created_at": "2025-10-18T15:04:03.595518",
+    "score": 0.58,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/credentum/veris-memory-mcp-sdk",
+    "repository": "https://github.com/credentum/veris-memory-mcp-sdk",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-sdk'\",\"Published today\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806996"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@amirafa/vuexp",
+    "version": "1.0.2",
+    "created_at": "2025-10-18T14:39:04.520000",
+    "score": 0.55,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806085"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "vxpwm4wtupkm",
+    "version": "2.22.16",
+    "created_at": "2025-10-17T17:59:04.001000",
+    "score": 0.55,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806303"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "vcluster-yaml-mcp-server",
+    "version": "1.0.7",
+    "created_at": "2025-10-18T03:13:03.972000",
+    "score": 0.55,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806379"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "pilot-ts",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T14:56:17.280000",
+    "score": 0.55,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806464"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "sylph-jsx",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T14:55:08.209000",
+    "score": 0.55,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 1.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository or homepage\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806495"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "article-cli",
+    "version": "1.1.1",
+    "created_at": "2025-10-09T20:49:21.128371",
+    "score": 0.5133333333333333,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.7333333333333334,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/article-cli/",
+    "repository": "https://github.com/feelpp/article.cli.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Only 8 days old\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.808090"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@studiostyx/erisbot-cli",
+    "version": "0.3.0",
+    "created_at": "2025-10-09T13:18:43.228000",
+    "score": 0.505,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.7,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/studio-styx/eris-api-cli#readme",
+    "repository": "git+https://github.com/studio-styx/eris-api-cli.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-cli'\",\"Only 9 days old\",\"Single maintainer\",\"Very young account (9 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806155"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "market-data-core",
+    "version": "1.2.0",
+    "created_at": "2025-10-18T14:20:25.047114",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/market-data-core/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806588"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "telegram-bot-discussion",
+    "version": "0.0.1760820958810098",
+    "created_at": "2025-10-18T08:26:04.710510",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/telegram-bot-discussion/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806599"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "linkminer",
+    "version": "1.0.0",
+    "created_at": "2025-10-18T12:44:56.735298",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/skye-cyber/linkminer",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806663"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "pymmdc",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T12:28:16.183154",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/pymmdc/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806676"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "oop-es",
+    "version": "0.1.2",
+    "created_at": "2025-10-18T13:45:03.569451",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/oop-es/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806826"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "linear-drift-detector",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T12:09:56.310385",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/SakibHasanSimanto/Linear_Drift_Detector",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806933"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "oop-es-pg",
+    "version": "0.1.2",
+    "created_at": "2025-10-18T13:45:15.262274",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/oop-es-pg/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807008"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "optical-ray-tracer",
+    "version": "1.2.0",
+    "created_at": "2025-10-18T13:56:15.741833",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/Damzo/optical_ray_collector",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807062"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "image-labeling-yolo",
+    "version": "0.1.2",
+    "created_at": "2025-10-18T12:44:32.126586",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/image-labeling-yolo/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807084"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "wauxio",
+    "version": "0.3.6",
+    "created_at": "2025-10-18T13:43:22.265817",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/wauxio/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807105"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "hash-directory",
+    "version": "2025.10.10",
+    "created_at": "2025-10-18T12:40:00.105723",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/hash-directory/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807190"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "a3em",
+    "version": "1.0.3",
+    "created_at": "2025-10-18T13:19:22.429606",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/vu-a3em/a3em-dashboard",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807223"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "soundscan",
+    "version": "1.0.1",
+    "created_at": "2025-10-18T12:30:03.210717",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/soundscan/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807269"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "scperturb-cmap",
+    "version": "0.2.0",
+    "created_at": "2025-10-18T13:15:07.773077",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/scperturb-cmap/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807383"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "zodbc",
+    "version": "0.9.1",
+    "created_at": "2025-10-18T13:37:35.955631",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/zodbc/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807654"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "core-registry-client",
+    "version": "0.2.0",
+    "created_at": "2025-10-18T13:54:59.416694",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/core-registry-client/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807689"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "pathao-api",
+    "version": "1.0.0",
+    "created_at": "2025-10-18T12:33:57.070609",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/pathao-api/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807845"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "orpheus-npcf",
+    "version": "0.1.11",
+    "created_at": "2025-10-18T13:47:25.217047",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/lporth93/orpheus",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807876"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "relatipy",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T12:23:38.914077",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/relatipy/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807908"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "gitnextrelease",
+    "version": "0.7.4",
+    "created_at": "2025-10-18T12:32:56.116344",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/gitnextrelease/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807994"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "subtask-manager",
+    "version": "0.1.0",
+    "created_at": "2025-10-18T13:20:51.579361",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/subtask-manager/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.808016"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "sonicslicer",
+    "version": "1.0.0",
+    "created_at": "2025-10-18T12:39:01.356182",
+    "score": 0.475,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/slicer/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.808037"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "experimented",
+    "version": "0.0.6",
+    "created_at": "2025-10-14T12:59:26.191026",
+    "score": 0.44166666666666665,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.8666666666666667,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/experimented/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 4 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807855"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "s2a-sdk",
+    "version": "1.0.3",
+    "created_at": "2025-09-29T16:30:00.457184",
+    "score": 0.43000000000000005,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.4,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/99technologies-ai/s2a-sdk-python",
+    "repository": "https://github.com/99technologies-ai/s2a-sdk-python",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-sdk'\",\"Only 18 days old\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.808123"
+  },
+  {
+    "ecosystem": "pypi",
+    "name": "fppull",
+    "version": "1.0.6",
+    "created_at": "2025-10-10T16:59:26.918240",
+    "score": 0.41666666666666663,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 0.7666666666666666,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://pypi.org/project/fppull/",
+    "repository": null,
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Only 7 days old\",\"No repository URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.807712"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "conductor-node",
+    "version": "12.38.0",
+    "created_at": "2022-08-30T17:54:31.855000",
+    "score": 0.405,
+    "breakdown": {
+      "name_suspicion": 0.6,
+      "newness": 0.0,
+      "repo_missing": 0.5,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": null,
+    "repository": "https://github.com/conductor-is/quickbooks-desktop-node.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Contains trope suffix '-node'\",\"No homepage URL\",\"Single maintainer\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806453"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "query-fiter",
+    "version": "1.0.2",
+    "created_at": "2025-10-18T14:54:51.785000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/AyanUpadhaya/query-filter#readme",
+    "repository": "git+https://github.com/AyanUpadhaya/query-filter.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806012"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@zoomiit/openapi-anyenv-suite",
+    "version": "2.11.0",
+    "created_at": "2025-10-18T07:57:14.632000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/ramongranda/openapi-anyenv-suite#readme",
+    "repository": "git+https://github.com/ramongranda/openapi-anyenv-suite.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806062"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "macroclickjs",
+    "version": "1.2.14",
+    "created_at": "2025-10-17T19:25:55.893000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/Emanuel250YT/MacroClickJS#readme",
+    "repository": "git+https://github.com/Emanuel250YT/MacroClickJS.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806142"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@ton-ai-core/vibecode-linter",
+    "version": "0.1.8",
+    "created_at": "2025-10-18T11:44:56.497000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/ton-ai-core/vibecode-linter#readme",
+    "repository": "git+https://github.com/ton-ai-core/vibecode-linter.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806166"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "n8n-nodes-google-drive-recursive",
+    "version": "1.0.1",
+    "created_at": "2025-10-18T14:52:46.764000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/s-yhc/n8n-nodes-google-drive-recursive",
+    "repository": "git+https://github.com/s-yhc/n8n-nodes-google-drive-tree.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806198"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@utcp/cli",
+    "version": "1.0.0",
+    "created_at": "2025-10-18T14:59:11.717000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/universal-tool-calling-protocol/typescript-utcp#readme",
+    "repository": "git+https://github.com/universal-tool-calling-protocol/typescript-utcp.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806262"
+  },
+  {
+    "ecosystem": "npm",
+    "name": "@utcp/mcp",
+    "version": "1.0.0",
+    "created_at": "2025-10-18T14:59:09.142000",
+    "score": 0.4,
+    "breakdown": {
+      "name_suspicion": 0.0,
+      "newness": 1.0,
+      "repo_missing": 0.0,
+      "maintainer_reputation": 1.0,
+      "script_risk": 0.0
+    },
+    "homepage": "https://github.com/universal-tool-calling-protocol/typescript-utcp#readme",
+    "repository": "git+https://github.com/universal-tool-calling-protocol/typescript-utcp.git",
+    "maintainers_count": 1,
+    "has_install_scripts": false,
+    "reasons": [
+      "[\"Published today\",\"Single maintainer\",\"Very young account (0 days)\"]"
+    ],
+    "scored_at": "2025-10-18T22:05:01.806272"
+  }
+]

@@ -1,6 +1,5 @@
 """Live Feed page - Browse daily suspicious packages."""
 
-from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -181,7 +180,7 @@ for idx, pkg in enumerate(filtered_data, 1):
         col_a, col_b, col_c = st.columns(3)
 
         with col_a:
-            if st.button(f"📋 Copy Name", key=f"copy_{idx}"):
+            if st.button("📋 Copy Name", key=f"copy_{idx}"):
                 st.code(pkg["name"], language=None)
 
         with col_b:
@@ -189,9 +188,8 @@ for idx, pkg in enumerate(filtered_data, 1):
             if casefile_path.exists():
                 st.markdown(f"[📄 View Casefile]({casefile_path})")
 
-        with col_c:
-            with st.popover("🔍 Raw JSON"):
-                st.json(pkg)
+        with col_c, st.popover("🔍 Raw JSON"):
+            st.json(pkg)
 
 st.markdown("---")
 

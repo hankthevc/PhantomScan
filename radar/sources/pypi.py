@@ -1,14 +1,14 @@
 """PyPI package source implementation."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import feedparser
 import httpx
 from rich.console import Console
 
-from radar.types import Ecosystem, PackageCandidate
 from radar.sources.base import PackageSource
+from radar.types import Ecosystem, PackageCandidate
 from radar.utils import is_offline_mode, load_jsonl, load_policy
 
 console = Console()
@@ -23,7 +23,7 @@ class PyPISource(PackageSource):
         self.config = self.policy.sources["pypi"]
 
         if not is_offline_mode():
-            self.client = httpx.Client(
+            self.client: httpx.Client | None = httpx.Client(
                 timeout=self.config["timeout"],
                 headers={"User-Agent": self.policy.network["user_agent"]},
                 follow_redirects=True,
@@ -60,16 +60,34 @@ class PyPISource(PackageSource):
         """Fetch package names from PyPI RSS feeds."""
         names = set()
 
-        # Fetch from both RSS feeds
+        # Fetch from both RSS feeds using a simpler approach
         for feed_url in [self.config["rss_packages"], self.config["rss_updates"]]:
             try:
-                feed = feedparser.parse(feed_url)
-                for entry in feed.entries[: limit // 2]:
-                    # Extract package name from title (format: "package-name version")
-                    title = entry.get("title", "")
-                    if " " in title:
-                        name = title.split(" ")[0]
-                        names.add(name)
+                # Use httpx directly to fetch and parse RSS
+                response = self.client.get(feed_url)
+                response.raise_for_status()
+                
+                # Simple XML parsing for package names
+                import xml.etree.ElementTree as ET
+                root = ET.fromstring(response.text)
+                
+                # Find all <title> elements and extract package names
+                for item in root.findall('.//item'):
+                    title_elem = item.find('title')
+                    if title_elem is not None and title_elem.text:
+                        # Title format: "package-name version" or "package-name added to PyPI"
+                        title = title_elem.text
+                        if " added to PyPI" in title:
+                            name = title.replace(" added to PyPI", "").strip()
+                        elif " " in title:
+                            # Format: "package-name version"
+                            name = title.split(" ")[0].strip()
+                        else:
+                            name = title.strip()
+                        
+                        if name and not name.startswith("_"):
+                            names.add(name)
+                            
             except Exception as e:
                 console.print(f"[yellow]Warning: Failed to parse RSS {feed_url}: {e}[/yellow]")
 
@@ -97,7 +115,7 @@ class PyPISource(PackageSource):
                     return None
                 if attempt == self.config["retries"] - 1:
                     raise
-            except Exception as e:
+            except Exception:
                 if attempt == self.config["retries"] - 1:
                     raise
 
@@ -120,7 +138,7 @@ class PyPISource(PackageSource):
 
         # Fallback to current time if no upload time found
         if earliest_time is None:
-            earliest_time = datetime.now(timezone.utc)
+            earliest_time = datetime.now(UTC)
 
         # Extract repository URL
         repo_url = None

@@ -1,10 +1,10 @@
 """Heuristic-based scoring for package candidates."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from rapidfuzz import fuzz
 
-from radar.types import Ecosystem, PackageCandidate, ScoreBreakdown, PolicyConfig
+from radar.types import Ecosystem, PackageCandidate, PolicyConfig, ScoreBreakdown
 
 
 class PackageScorer:
@@ -40,23 +40,33 @@ class PackageScorer:
         script_score, script_reasons = self._score_script_risk(candidate)
         reasons.extend(script_reasons)
 
+        # 6. Version flip (PyPI only) - requires enrichment
+        version_flip_score = 0.0
+
+        # 7. README plagiarism - requires enrichment
+        readme_plagiarism_score = 0.0
+
         return ScoreBreakdown(
             name_suspicion=name_score,
             newness=newness_score,
             repo_missing=repo_score,
             maintainer_reputation=maint_score,
             script_risk=script_score,
+            version_flip=version_flip_score,
+            readme_plagiarism=readme_plagiarism_score,
             reasons=reasons,
         )
 
     def compute_weighted_score(self, breakdown: ScoreBreakdown) -> float:
         """Compute weighted total score from breakdown."""
         total = 0.0
-        total += breakdown.name_suspicion * self.weights["name_suspicion"]
-        total += breakdown.newness * self.weights["newness"]
-        total += breakdown.repo_missing * self.weights["repo_missing"]
-        total += breakdown.maintainer_reputation * self.weights["maintainer_reputation"]
-        total += breakdown.script_risk * self.weights["script_risk"]
+        total += breakdown.name_suspicion * self.weights.get("name_suspicion", 0.30)
+        total += breakdown.newness * self.weights.get("newness", 0.25)
+        total += breakdown.repo_missing * self.weights.get("repo_missing", 0.15)
+        total += breakdown.maintainer_reputation * self.weights.get("maintainer_reputation", 0.15)
+        total += breakdown.script_risk * self.weights.get("script_risk", 0.10)
+        total += breakdown.version_flip * self.weights.get("version_flip", 0.03)
+        total += breakdown.readme_plagiarism * self.weights.get("readme_plagiarism", 0.02)
         return min(1.0, max(0.0, total))
 
     def _score_name_suspicion(
@@ -100,12 +110,12 @@ class PackageScorer:
     def _score_newness(self, candidate: PackageCandidate) -> tuple[float, list[str]]:
         """Score based on package age."""
         reasons = []
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # Ensure created_at is timezone-aware
         created_at = candidate.created_at
         if created_at.tzinfo is None:
-            created_at = created_at.replace(tzinfo=timezone.utc)
+            created_at = created_at.replace(tzinfo=UTC)
 
         age_days = (now - created_at).days
         threshold = self.heuristics["new_package_days"]
@@ -145,10 +155,12 @@ class PackageScorer:
     def _score_maintainer_reputation(
         self, candidate: PackageCandidate
     ) -> tuple[float, list[str]]:
-        """Score based on maintainer count."""
+        """Score based on maintainer count and quality signals."""
         reasons = []
         count = candidate.maintainers_count
+        score = 0.0
 
+        # Base scoring on count
         if count <= 1:
             score = 1.0
             reasons.append("Single maintainer")
@@ -158,7 +170,20 @@ class PackageScorer:
         else:
             score = 0.0
 
-        return score, reasons
+        # Enhanced signals
+        # Check for disposable email (major red flag)
+        if candidate.disposable_email and count <= 1:
+            score = 1.0
+            reasons.append("Disposable email address detected")
+
+        # Check for young maintainer account
+        age_threshold = self.heuristics.get("thresholds", {}).get("maintainer_age_days", 14)
+        if candidate.maintainers_age_hint_days is not None:
+            if candidate.maintainers_age_hint_days < age_threshold:
+                score = min(1.0, score + 0.3)
+                reasons.append(f"Very young account ({candidate.maintainers_age_hint_days} days)")
+
+        return min(1.0, score), reasons
 
     def _score_script_risk(self, candidate: PackageCandidate) -> tuple[float, list[str]]:
         """Score based on install scripts (npm only)."""

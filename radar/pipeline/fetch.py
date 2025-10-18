@@ -1,13 +1,14 @@
 """Fetch packages from data sources."""
 
 from datetime import datetime
+from typing import Union
 
 from rich.console import Console
 from rich.progress import track
 
 from radar.sources.npm import NpmSource
 from radar.sources.pypi import PyPISource
-from radar.types import Ecosystem, PackageCandidate
+from radar.types import PackageCandidate
 from radar.utils import get_data_path, save_jsonl
 
 console = Console()
@@ -30,7 +31,7 @@ def fetch_packages(
         date_str = datetime.utcnow().strftime("%Y-%m-%d")
 
     all_candidates = []
-    sources = []
+    sources: list[Union[PyPISource, NpmSource]] = []
 
     # Initialize sources
     if "pypi" in ecosystems:

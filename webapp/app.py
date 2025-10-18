@@ -1,5 +1,6 @@
 """PhantomScan Streamlit App - Main Entry Point."""
 
+import httpx
 import streamlit as st
 
 # Page configuration
@@ -74,6 +75,109 @@ st.markdown(
     - **⚙️ Settings** - Configure scoring policy
     """
 )
+
+st.markdown("---")
+
+# Quick Score Panel
+st.markdown("## ⚡ Quick Score")
+st.markdown("Score any package in real-time using the PhantomScan API")
+
+with st.expander("🔍 Score a Package", expanded=False):
+    col1, col2 = st.columns([1, 2])
+
+    with col1:
+        quick_ecosystem = st.selectbox(
+            "Ecosystem",
+            options=["PyPI", "npm"],
+            key="quick_ecosystem",
+        )
+
+    with col2:
+        quick_name = st.text_input(
+            "Package Name",
+            placeholder="e.g., requests, express",
+            key="quick_name",
+        )
+
+    col3, col4 = st.columns([1, 1])
+
+    with col3:
+        quick_version = st.text_input(
+            "Version (optional)",
+            placeholder="e.g., 1.0.0",
+            value="0.0.0",
+            key="quick_version",
+        )
+
+    with col4:
+        quick_maintainers = st.number_input(
+            "Maintainers Count",
+            min_value=1,
+            max_value=100,
+            value=1,
+            key="quick_maintainers",
+        )
+
+    if st.button("🚀 Score Package", type="primary"):
+        if not quick_name:
+            st.error("Please enter a package name")
+        else:
+            with st.spinner("Scoring package..."):
+                try:
+                    # Call the FastAPI endpoint
+                    api_url = "http://localhost:8000/score"
+                    payload = {
+                        "ecosystem": quick_ecosystem.lower(),
+                        "name": quick_name,
+                        "version": quick_version or "0.0.0",
+                        "maintainers_count": quick_maintainers,
+                    }
+
+                    response = httpx.post(api_url, json=payload, timeout=10.0)
+
+                    if response.status_code == 200:
+                        data = response.json()
+
+                        # Display score badge
+                        score = data["score"]
+                        score_color = "🔴" if score > 0.7 else "🟡" if score > 0.4 else "🟢"
+                        st.markdown(
+                            f"### {score_color} Risk Score: {score:.2f} / 1.0"
+                        )
+
+                        # Display breakdown table
+                        st.markdown("#### Score Breakdown")
+                        breakdown = data["breakdown"]
+
+                        breakdown_data = []
+                        for key, value in breakdown.items():
+                            breakdown_data.append({
+                                "Component": key.replace("_", " ").title(),
+                                "Score": f"{value:.2f}",
+                            })
+
+                        st.table(breakdown_data)
+
+                        # Display reasons
+                        st.markdown("#### Risk Indicators")
+                        reasons = data.get("reasons", [])
+                        if reasons:
+                            for reason in reasons:
+                                st.markdown(f"- {reason}")
+                        else:
+                            st.info("No significant risk indicators detected")
+
+                    elif response.status_code == 503:
+                        st.error("⏱️ Scoring timeout - enrichment services may be temporarily unavailable")
+                    else:
+                        st.error(f"Error: {response.status_code} - {response.text}")
+
+                except httpx.ConnectError:
+                    st.error("❌ Cannot connect to API. Make sure the FastAPI server is running on port 8000.")
+                except httpx.TimeoutException:
+                    st.error("⏱️ Request timeout - the API took too long to respond")
+                except Exception as e:
+                    st.error(f"Error scoring package: {e!s}")
 
 st.markdown("---")
 

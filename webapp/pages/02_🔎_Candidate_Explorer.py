@@ -214,9 +214,8 @@ if filtered:
 
                     st.code(cmd)
 
-            with col3:
-                with st.popover("🔍 Raw JSON"):
-                    st.json(pkg)
+            with col3, st.popover("🔍 Raw JSON"):
+                st.json(pkg)
 
 else:
     st.info("No packages match your search criteria.")

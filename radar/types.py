@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -21,12 +20,15 @@ class PackageCandidate(BaseModel):
     name: str
     version: str
     created_at: datetime
-    homepage: Optional[str] = None
-    repository: Optional[str] = None
+    homepage: str | None = None
+    repository: str | None = None
     maintainers_count: int = 0
     has_install_scripts: bool = False  # npm only
-    description: Optional[str] = None
+    description: str | None = None
     raw_metadata: dict = Field(default_factory=dict)
+    # Enhanced maintainer signals
+    disposable_email: bool = False
+    maintainers_age_hint_days: int | None = None
 
 
 class ScoreBreakdown(BaseModel):
@@ -37,6 +39,8 @@ class ScoreBreakdown(BaseModel):
     repo_missing: float = Field(ge=0.0, le=1.0)
     maintainer_reputation: float = Field(ge=0.0, le=1.0)
     script_risk: float = Field(ge=0.0, le=1.0)
+    version_flip: float = Field(ge=0.0, le=1.0, default=0.0)
+    readme_plagiarism: float = Field(ge=0.0, le=1.0, default=0.0)
     reasons: list[str] = Field(default_factory=list)
 
 

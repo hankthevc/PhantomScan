@@ -6,7 +6,6 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
 
-from radar.types import ScoredCandidate
 from radar.utils import get_data_path, load_policy, save_json
 
 console = Console()

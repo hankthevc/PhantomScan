@@ -18,10 +18,8 @@ class PackageSource(ABC):
         Returns:
             List of normalized package candidates
         """
-        pass
 
     @property
     @abstractmethod
     def ecosystem(self) -> Ecosystem:
         """Return the ecosystem identifier."""
-        pass

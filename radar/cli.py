@@ -1,14 +1,13 @@
 """Command-line interface for PhantomScan."""
 
 from datetime import datetime
-from typing import Optional
+from typing import Annotated
 
 import typer
 from rich.console import Console
-from typing_extensions import Annotated
 
-from radar.pipeline.fetch import fetch_packages
 from radar.pipeline.feed import generate_feed
+from radar.pipeline.fetch import fetch_packages
 from radar.pipeline.score import score_candidates
 
 app = typer.Typer(
@@ -27,7 +26,7 @@ def fetch(
     ] = ["pypi", "npm"],
     limit: Annotated[int, typer.Option("--limit", "-l", help="Max packages per ecosystem")] = 400,
     date: Annotated[
-        Optional[str], typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
+        str | None, typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
     ] = None,
 ) -> None:
     """Fetch recent packages from registries."""
@@ -43,7 +42,7 @@ def fetch(
 @app.command()
 def score(
     date: Annotated[
-        Optional[str], typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
+        str | None, typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
     ] = None,
 ) -> None:
     """Score fetched candidates."""
@@ -59,9 +58,9 @@ def score(
 @app.command()
 def feed(
     date: Annotated[
-        Optional[str], typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
+        str | None, typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
     ] = None,
-    top: Annotated[Optional[int], typer.Option("--top", "-n", help="Top N candidates")] = None,
+    top: Annotated[int | None, typer.Option("--top", "-n", help="Top N candidates")] = None,
 ) -> None:
     """Generate top-N threat intelligence feed."""
     console.print("[bold blue]📊 Generating feed...[/bold blue]")
@@ -80,7 +79,7 @@ def run_all(
         typer.Option("--ecosystems", "-e", help="Ecosystems to fetch (pypi, npm)"),
     ] = ["pypi", "npm"],
     limit: Annotated[int, typer.Option("--limit", "-l", help="Max packages per ecosystem")] = 400,
-    top: Annotated[Optional[int], typer.Option("--top", "-n", help="Top N candidates")] = None,
+    top: Annotated[int | None, typer.Option("--top", "-n", help="Top N candidates")] = None,
 ) -> None:
     """Run complete pipeline: fetch → score → feed."""
     date = datetime.utcnow().strftime("%Y-%m-%d")
@@ -104,7 +103,7 @@ def run_all(
     # Step 3: Feed
     console.print("[bold blue]Step 3/3: Generating feed...[/bold blue]")
     generate_feed(date, top)
-    console.print(f"[green]✓ Generated feed[/green]\n")
+    console.print("[green]✓ Generated feed[/green]\n")
 
     console.print(f"[bold green]✅ Pipeline complete! Feed saved to data/feeds/{date}/[/bold green]")
 

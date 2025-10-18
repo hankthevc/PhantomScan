@@ -7,7 +7,9 @@ weights:
   newness: 0.25
   repo_missing: 0.15
   maintainer_reputation: 0.15
-  script_risk: 0.15
+  script_risk: 0.10
+  version_flip: 0.03
+  readme_plagiarism: 0.02
 
 # Heuristic Parameters
 heuristics:
@@ -74,6 +76,30 @@ heuristics:
 
   # Fuzzy match threshold (0-100, lower is more similar)
   fuzzy_threshold: 15
+
+  # Thresholds for new heuristics
+  thresholds:
+    readme_plagiarism: 0.85  # Similarity threshold for flagging plagiarism
+    version_flip_dep_increase: 10  # Number of new dependencies to flag
+    maintainer_age_days: 14  # Days to consider maintainer account "young"
+    
+  # Disposable email domains (red flags for maintainer quality)
+  disposable_email_domains:
+    - mailinator
+    - 10minutemail
+    - yopmail
+    - sharklasers
+    - guerrillamail
+    - temp-mail
+    - throwaway
+    
+  # Enrichment lookups (requires external API keys)
+  lookups:
+    enable_dependents: false  # Require LIBRARIES_IO_KEY env var
+    libraries_io_api: "https://libraries.io/api"
+    dependents_low_threshold: 0  # Flag packages with 0 dependents
+    dependents_high_threshold: 50  # Consider >= 50 as established
+    timeout: 5  # Timeout for enrichment calls (seconds)
 
 # Feed Generation
 feed:

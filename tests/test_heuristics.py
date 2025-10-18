@@ -1,6 +1,6 @@
 """Tests for scoring heuristics."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -23,7 +23,7 @@ def benign_package() -> PackageCandidate:
         ecosystem=Ecosystem.PYPI,
         name="legitimate-package",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc) - timedelta(days=365),
+        created_at=datetime.now(UTC) - timedelta(days=365),
         homepage="https://example.com",
         repository="https://github.com/org/repo",
         maintainers_count=5,
@@ -38,7 +38,7 @@ def suspicious_package() -> PackageCandidate:
         ecosystem=Ecosystem.PYPI,
         name="requests2",  # Similar to 'requests'
         version="0.0.1",
-        created_at=datetime.now(timezone.utc),  # Brand new
+        created_at=datetime.now(UTC),  # Brand new
         homepage=None,
         repository=None,
         maintainers_count=1,
@@ -99,7 +99,7 @@ def test_name_suspicion_prefix(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="openai-tools",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -116,7 +116,7 @@ def test_name_suspicion_suffix(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="somepkg-cli",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -133,15 +133,17 @@ def test_name_suspicion_fuzzy_match(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="requestz",  # Very similar to 'requests'
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
     breakdown = scorer.score(package)
 
-    # Should detect similarity
-    assert breakdown.name_suspicion > 0.3
-    # May or may not have a specific reason depending on threshold
+    # Should detect similarity (score is based on distance/threshold)
+    # requestz vs requests has distance ~12.5, threshold 15
+    # So score = 0.9 * (1 - 12.5/15) = ~0.15
+    assert breakdown.name_suspicion > 0.1
+    assert "Very similar to 'requests'" in " ".join(breakdown.reasons)
 
 
 def test_newness_scoring(scorer: PackageScorer) -> None:
@@ -151,7 +153,7 @@ def test_newness_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -163,7 +165,7 @@ def test_newness_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc) - timedelta(days=365),
+        created_at=datetime.now(UTC) - timedelta(days=365),
         maintainers_count=1,
     )
 
@@ -178,7 +180,7 @@ def test_repo_missing_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -190,7 +192,7 @@ def test_repo_missing_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         homepage="https://example.com",
         repository="https://github.com/test/test",
         maintainers_count=1,
@@ -207,7 +209,7 @@ def test_maintainer_reputation_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -219,7 +221,7 @@ def test_maintainer_reputation_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=2,
     )
 
@@ -231,7 +233,7 @@ def test_maintainer_reputation_scoring(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=5,
     )
 
@@ -246,7 +248,7 @@ def test_script_risk_npm(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.NPM,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
         has_install_scripts=True,
     )
@@ -259,7 +261,7 @@ def test_script_risk_npm(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.NPM,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
         has_install_scripts=False,
     )
@@ -274,7 +276,7 @@ def test_script_risk_pypi(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
@@ -288,7 +290,7 @@ def test_weighted_score_calculation(scorer: PackageScorer) -> None:
         ecosystem=Ecosystem.PYPI,
         name="test",
         version="1.0.0",
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
         maintainers_count=1,
     )
 
