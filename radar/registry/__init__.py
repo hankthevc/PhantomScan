@@ -1,0 +1,1 @@
+"""Registry existence checking utilities."""

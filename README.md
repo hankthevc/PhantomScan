@@ -84,6 +84,85 @@ PhantomScan analyzes 7 risk dimensions:
 - **Dependents Enrichment** (Optional): Query libraries.io to adjust risk based on package adoption
 - **README Plagiarism** (Coming Soon): Detect content similarity between package and repository READMEs
 
+## 🛡️ Strict Mode & Watchlist
+
+PhantomScan includes a **registry existence gate** to filter out packages that don't actually exist in their registries, reducing false positives from parsing errors or data inconsistencies.
+
+### Configuration
+
+Edit `config/policy.yml`:
+
+```yaml
+feed:
+  strict: true              # Only real packages in main feed
+  write_watchlist: true     # Emit watchlist files for non-existent packages
+
+network:
+  registry_timeout_seconds: 4  # Timeout for existence checks
+```
+
+### Behavior
+
+| Mode | Main Feed | Watchlist | API `/score` |
+|------|-----------|-----------|--------------|
+| `strict=true` | Only packages verified in registry | All non-existent names | 404 for non-existent |
+| `strict=false` | All packages (with `exists` flag) | Optional | 200 with `exists=false` |
+
+### Files Generated
+
+When `write_watchlist: true`, the pipeline creates:
+
+```
+data/feeds/YYYY-MM-DD/
+  ├── topN.json           # Main feed (real packages only in strict mode)
+  ├── topN.csv            # Main feed as CSV
+  ├── watchlist.json      # Non-existent packages
+  └── watchlist.csv       # Watchlist as CSV
+```
+
+### API Usage
+
+```bash
+# Score with strict mode (rejects non-existent packages)
+curl -X POST http://localhost:8000/score \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ecosystem": "npm",
+    "name": "fake-package-xyz",
+    "strict_exists": true
+  }'
+# Returns 404: "Package not found in registry (reason: 404)"
+
+# Score without strict mode (scores anyway)
+curl -X POST http://localhost:8000/score \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ecosystem": "npm",
+    "name": "fake-package-xyz",
+    "strict_exists": false
+  }'
+# Returns 200 with breakdown.exists_in_registry = false
+
+# Get watchlist for a date
+curl http://localhost:8000/watchlist/2025-10-20
+
+# Get latest watchlist
+curl http://localhost:8000/watchlist/latest
+```
+
+### UI Integration
+
+The Streamlit **Live Feed** page now includes two tabs:
+
+- **✅ Active Packages**: Scored packages that exist in registries
+- **⚠️ Watchlist**: Packages detected but not found in registry (with reasons: `404`, `timeout`, `offline`, `error`)
+
+The **Quick Score** panel includes a "Strict Mode" toggle to control existence checking behavior.
+
+### Offline Mode
+
+When `RADAR_OFFLINE=1` is set, existence checks return `(False, "offline")` and packages are routed to the watchlist unless strict mode is disabled.
+
 ## 🏗️ Architecture
 
 - **Data Sources**: PyPI RSS + JSON API, npm changes feed (no authentication required)

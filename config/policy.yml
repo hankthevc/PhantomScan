@@ -107,6 +107,10 @@ feed:
   top_n: 50
   # Minimum score to include (0.0 - 1.0)
   min_score: 0.3
+  # Strict mode: only include packages that exist in their registry
+  strict: true
+  # Write a separate watchlist file for non-existent packages
+  write_watchlist: true
 
 # Data Sources
 sources:
@@ -139,6 +143,8 @@ network:
   pool_size: 10
   # API endpoint timeout (seconds) - prevents long-running enrichment fan-outs
   api_timeout_seconds: 8
+  # Registry existence check timeout (seconds)
+  registry_timeout_seconds: 4
 
 # Storage
 storage:

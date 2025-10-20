@@ -1,32 +1,36 @@
 """Score package candidates for risk."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pandas as pd
 from rich.console import Console
 
+from radar.registry.existence import exists_in_registry
 from radar.scoring.heuristics import PackageScorer
 from radar.storage import StorageManager
-from radar.types import PackageCandidate, ScoredCandidate
+from radar.types import PackageCandidate, ScoredCandidate, WatchlistEntry
 from radar.utils import get_data_path, load_jsonl, load_policy
 
 console = Console()
 
 
-def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
+def score_candidates(
+    date_str: str | None = None,
+) -> tuple[list[ScoredCandidate], list[WatchlistEntry]]:
     """Score candidates from raw data for a given date.
 
     Args:
         date_str: Date string (default: today)
 
     Returns:
-        List of scored candidates
+        Tuple of (scored_candidates, watchlist_entries)
     """
     if date_str is None:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(UTC).strftime("%Y-%m-%d")
 
     policy = load_policy()
     scorer = PackageScorer(policy)
+    strict_mode = policy.feed.get("strict", True)
 
     # Load raw candidates
     raw_path = get_data_path(date_str, "raw")
@@ -43,12 +47,38 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
 
     if not all_candidates:
         console.print(f"[yellow]No candidates found for {date_str}[/yellow]")
-        return []
+        return [], []
 
-    # Score each candidate
+    # Check existence and score
     scored = []
+    watchlist: list[WatchlistEntry] = []
+
+    console.print(f"[cyan]Checking {len(all_candidates)} candidates against registries...[/cyan]")
+
     for candidate in all_candidates:
+        # Check if package exists in registry
+        exists, reason = exists_in_registry(candidate.ecosystem.value, candidate.name, policy)
+
+        if strict_mode and not exists:
+            # In strict mode, skip scoring and add to watchlist
+            watchlist.append(
+                WatchlistEntry(
+                    ecosystem=candidate.ecosystem,
+                    name=candidate.name,
+                    not_found_reason=reason,
+                    first_seen_at=datetime.now(UTC),
+                )
+            )
+            continue
+
+        # Score the candidate
         breakdown = scorer.score(candidate)
+        breakdown.exists_in_registry = exists
+        breakdown.not_found_reason = reason if not exists else None
+
+        if not exists:
+            breakdown.reasons.append(f"Package not found in registry ({reason})")
+
         total_score = scorer.compute_weighted_score(breakdown)
 
         scored.append(
@@ -56,12 +86,16 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
                 candidate=candidate,
                 score=total_score,
                 breakdown=breakdown,
-                scored_at=datetime.utcnow(),
+                scored_at=datetime.now(UTC),
             )
         )
 
     # Sort by score descending
     scored.sort(key=lambda x: x.score, reverse=True)
+
+    console.print(
+        f"[green]✓ Scored {len(scored)} candidates, {len(watchlist)} in watchlist[/green]"
+    )
 
     # Save to Parquet
     processed_path = get_data_path(date_str, "processed")
@@ -81,6 +115,10 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
                 "repo_missing": sc.breakdown.repo_missing,
                 "maintainer_reputation": sc.breakdown.maintainer_reputation,
                 "script_risk": sc.breakdown.script_risk,
+                "version_flip": sc.breakdown.version_flip,
+                "readme_plagiarism": sc.breakdown.readme_plagiarism,
+                "exists_in_registry": sc.breakdown.exists_in_registry,
+                "not_found_reason": sc.breakdown.not_found_reason or "",
                 "homepage": sc.candidate.homepage,
                 "repository": sc.candidate.repository,
                 "maintainers_count": sc.candidate.maintainers_count,
@@ -99,4 +137,4 @@ def score_candidates(date_str: str | None = None) -> list[ScoredCandidate]:
         console.print(f"[green]✓ Inserted {len(scored)} candidates into DuckDB[/green]")
 
     console.print(f"[bold green]Scored {len(scored)} candidates[/bold green]")
-    return scored
+    return scored, watchlist

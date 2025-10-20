@@ -83,7 +83,7 @@ st.markdown("## ⚡ Quick Score")
 st.markdown("Score any package in real-time using the PhantomScan API")
 
 with st.expander("🔍 Score a Package", expanded=False):
-    col1, col2 = st.columns([1, 2])
+    col1, col2, col3 = st.columns([1, 2, 1])
 
     with col1:
         quick_ecosystem = st.selectbox(
@@ -97,6 +97,11 @@ with st.expander("🔍 Score a Package", expanded=False):
             "Package Name",
             placeholder="e.g., requests, express",
             key="quick_name",
+        )
+
+    with col3:
+        quick_strict = st.toggle(
+            "Strict Mode", value=True, help="Reject packages not found in registry"
         )
 
     col3, col4 = st.columns([1, 1])
@@ -131,6 +136,7 @@ with st.expander("🔍 Score a Package", expanded=False):
                         "name": quick_name,
                         "version": quick_version or "0.0.0",
                         "maintainers_count": quick_maintainers,
+                        "strict_exists": quick_strict,
                     }
 
                     response = httpx.post(api_url, json=payload, timeout=10.0)
@@ -141,20 +147,30 @@ with st.expander("🔍 Score a Package", expanded=False):
                         # Display score badge
                         score = data["score"]
                         score_color = "🔴" if score > 0.7 else "🟡" if score > 0.4 else "🟢"
-                        st.markdown(
-                            f"### {score_color} Risk Score: {score:.2f} / 1.0"
-                        )
+                        st.markdown(f"### {score_color} Risk Score: {score:.2f} / 1.0")
 
                         # Display breakdown table
                         st.markdown("#### Score Breakdown")
                         breakdown = data["breakdown"]
 
+                        # Show existence status if present
+                        if "exists_in_registry" in breakdown:
+                            if breakdown["exists_in_registry"]:
+                                st.success("✅ Package verified in registry")
+                            else:
+                                reason = breakdown.get("not_found_reason", "unknown")
+                                st.warning(f"⚠️ Package not found in registry (reason: {reason})")
+
                         breakdown_data = []
                         for key, value in breakdown.items():
-                            breakdown_data.append({
-                                "Component": key.replace("_", " ").title(),
-                                "Score": f"{value:.2f}",
-                            })
+                            if key not in ["exists_in_registry", "not_found_reason"]:
+                                if isinstance(value, (int, float)):
+                                    breakdown_data.append(
+                                        {
+                                            "Component": key.replace("_", " ").title(),
+                                            "Score": f"{value:.2f}",
+                                        }
+                                    )
 
                         st.table(breakdown_data)
 
@@ -167,13 +183,22 @@ with st.expander("🔍 Score a Package", expanded=False):
                         else:
                             st.info("No significant risk indicators detected")
 
+                    elif response.status_code == 404:
+                        st.error(
+                            f"❌ Package '{quick_name}' not found in registry (strict mode enabled)"
+                        )
+                        st.info("💡 Disable strict mode to score packages that may not exist yet")
                     elif response.status_code == 503:
-                        st.error("⏱️ Scoring timeout - enrichment services may be temporarily unavailable")
+                        st.error(
+                            "⏱️ Scoring timeout - enrichment services may be temporarily unavailable"
+                        )
                     else:
                         st.error(f"Error: {response.status_code} - {response.text}")
 
                 except httpx.ConnectError:
-                    st.error("❌ Cannot connect to API. Make sure the FastAPI server is running on port 8000.")
+                    st.error(
+                        "❌ Cannot connect to API. Make sure the FastAPI server is running on port 8000."
+                    )
                 except httpx.TimeoutException:
                     st.error("⏱️ Request timeout - the API took too long to respond")
                 except Exception as e:

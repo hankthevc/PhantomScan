@@ -1,6 +1,6 @@
 """Command-line interface for PhantomScan."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Annotated
 
 import typer
@@ -21,19 +21,21 @@ console = Console()
 @app.command()
 def fetch(
     ecosystems: Annotated[
-        list[str],
+        list[str] | None,
         typer.Option("--ecosystems", "-e", help="Ecosystems to fetch (pypi, npm)"),
-    ] = ["pypi", "npm"],
+    ] = None,
     limit: Annotated[int, typer.Option("--limit", "-l", help="Max packages per ecosystem")] = 400,
     date: Annotated[
         str | None, typer.Option("--date", "-d", help="Date string (YYYY-MM-DD)")
     ] = None,
 ) -> None:
     """Fetch recent packages from registries."""
+    if ecosystems is None:
+        ecosystems = ["pypi", "npm"]
     console.print("[bold blue]🔭 Fetching packages...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(UTC).strftime("%Y-%m-%d")
 
     candidates = fetch_packages(ecosystems, limit, date)
     console.print(f"[bold green]✓ Fetched {len(candidates)} packages for {date}[/bold green]")
@@ -49,10 +51,12 @@ def score(
     console.print("[bold blue]🧮 Scoring candidates...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(UTC).strftime("%Y-%m-%d")
 
-    scored = score_candidates(date)
-    console.print(f"[bold green]✓ Scored {len(scored)} candidates for {date}[/bold green]")
+    scored, watchlist = score_candidates(date)
+    console.print(
+        f"[bold green]✓ Scored {len(scored)} candidates, {len(watchlist)} in watchlist for {date}[/bold green]"
+    )
 
 
 @app.command()
@@ -66,7 +70,7 @@ def feed(
     console.print("[bold blue]📊 Generating feed...[/bold blue]")
 
     if date is None:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
+        date = datetime.now(UTC).strftime("%Y-%m-%d")
 
     generate_feed(date, top)
     console.print(f"[bold green]✓ Generated feed for {date}[/bold green]")
@@ -75,14 +79,16 @@ def feed(
 @app.command(name="run-all")
 def run_all(
     ecosystems: Annotated[
-        list[str],
+        list[str] | None,
         typer.Option("--ecosystems", "-e", help="Ecosystems to fetch (pypi, npm)"),
-    ] = ["pypi", "npm"],
+    ] = None,
     limit: Annotated[int, typer.Option("--limit", "-l", help="Max packages per ecosystem")] = 400,
     top: Annotated[int | None, typer.Option("--top", "-n", help="Top N candidates")] = None,
 ) -> None:
     """Run complete pipeline: fetch → score → feed."""
-    date = datetime.utcnow().strftime("%Y-%m-%d")
+    if ecosystems is None:
+        ecosystems = ["pypi", "npm"]
+    date = datetime.now(UTC).strftime("%Y-%m-%d")
 
     console.print(f"[bold cyan]🚀 Running full radar pipeline for {date}...[/bold cyan]\n")
 
@@ -97,12 +103,14 @@ def run_all(
 
     # Step 2: Score
     console.print("[bold blue]Step 2/3: Scoring candidates...[/bold blue]")
-    scored = score_candidates(date)
-    console.print(f"[green]✓ Scored {len(scored)} candidates[/green]\n")
+    scored, watchlist = score_candidates(date)
+    console.print(
+        f"[green]✓ Scored {len(scored)} candidates, {len(watchlist)} in watchlist[/green]\n"
+    )
 
     # Step 3: Feed
     console.print("[bold blue]Step 3/3: Generating feed...[/bold blue]")
-    generate_feed(date, top)
+    generate_feed(date, top, watchlist)
     console.print("[green]✓ Generated feed[/green]\n")
 
     console.print(f"[bold green]✅ Pipeline complete! Feed saved to data/feeds/{date}/[/bold green]")

@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from radar.enrich.reputation import adjust_score_by_dependents, get_dependents_hint
 from radar.enrich.versions import analyze_version_history
+from radar.registry.existence import exists_in_registry
 from radar.reports.casefile import generate_casefile
 from radar.scoring.heuristics import PackageScorer
 from radar.types import Ecosystem, PackageCandidate
@@ -41,6 +42,7 @@ class ScoreRequest(BaseModel):
     repository: str | None = None
     maintainers_count: int = 1
     has_install_scripts: bool = False
+    strict_exists: bool | None = None  # Override policy strict mode
 
 
 class ScoreResponse(BaseModel):
@@ -125,6 +127,55 @@ async def get_latest_feed() -> JSONResponse:
     return await get_feed(latest_date)
 
 
+@app.get("/watchlist/{date}")
+async def get_watchlist(date: str) -> JSONResponse:
+    """Get watchlist for a specific date.
+
+    Args:
+        date: Date string in YYYY-MM-DD format
+
+    Returns:
+        JSON watchlist data
+    """
+    watchlist_path = Path("data/feeds") / date / "watchlist.json"
+
+    if not watchlist_path.exists():
+        # Return empty watchlist instead of 404
+        return JSONResponse(content=[])
+
+    watchlist_data = load_json(watchlist_path)
+
+    if watchlist_data is None:
+        raise HTTPException(status_code=500, detail="Failed to load watchlist data")
+
+    return JSONResponse(content=watchlist_data)
+
+
+@app.get("/watchlist/latest")
+async def get_latest_watchlist() -> JSONResponse:
+    """Get the most recent watchlist.
+
+    Returns:
+        JSON watchlist data for the latest available date
+    """
+    feeds_dir = Path("data/feeds")
+
+    if not feeds_dir.exists():
+        return JSONResponse(content=[])
+
+    # Find latest date with a watchlist
+    dates = []
+    for date_dir in feeds_dir.iterdir():
+        if date_dir.is_dir() and (date_dir / "watchlist.json").exists():
+            dates.append(date_dir.name)
+
+    if not dates:
+        return JSONResponse(content=[])
+
+    latest_date = sorted(dates, reverse=True)[0]
+    return await get_watchlist(latest_date)
+
+
 @app.post("/score", response_model=ScoreResponse)
 async def score_package(request: ScoreRequest) -> ScoreResponse:
     """Score a package using current policy.
@@ -134,6 +185,9 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
 
     Returns:
         Score breakdown and reasons
+
+    Raises:
+        HTTPException: 404 if package not found in strict mode
     """
 
     async def _score_with_enrichment() -> ScoreResponse:
@@ -146,6 +200,26 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
             else:
                 raise HTTPException(
                     status_code=400, detail=f"Invalid ecosystem: {request.ecosystem}"
+                )
+
+            # Load policy
+            policy = load_policy()
+
+            # Determine strict mode (request overrides policy)
+            strict_mode = (
+                request.strict_exists
+                if request.strict_exists is not None
+                else policy.feed.get("strict", True)
+            )
+
+            # Check existence in registry
+            exists, reason = exists_in_registry(ecosystem.value, request.name, policy)
+
+            # In strict mode, reject non-existent packages
+            if strict_mode and not exists:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Package not found in registry (reason: {reason})",
                 )
 
             # Parse created_at
@@ -167,10 +241,16 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
             )
 
             # Score it
-            policy = load_policy()
             scorer = PackageScorer(policy)
 
             breakdown = scorer.score(candidate)
+
+            # Add existence info to breakdown
+            breakdown.exists_in_registry = exists
+            breakdown.not_found_reason = reason if not exists else None
+
+            if not exists:
+                breakdown.reasons.append(f"Package not found in registry ({reason})")
 
             # Enrichment: Version flip analysis (PyPI only)
             if ecosystem == Ecosystem.PYPI:

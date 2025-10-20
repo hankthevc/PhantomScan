@@ -41,6 +41,8 @@ class ScoreBreakdown(BaseModel):
     script_risk: float = Field(ge=0.0, le=1.0)
     version_flip: float = Field(ge=0.0, le=1.0, default=0.0)
     readme_plagiarism: float = Field(ge=0.0, le=1.0, default=0.0)
+    exists_in_registry: bool = True  # New field for strict mode
+    not_found_reason: str | None = None  # Reason if not found
     reasons: list[str] = Field(default_factory=list)
 
 
@@ -51,6 +53,15 @@ class ScoredCandidate(BaseModel):
     score: float = Field(ge=0.0, le=1.0)
     breakdown: ScoreBreakdown
     scored_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class WatchlistEntry(BaseModel):
+    """Non-existent package captured for monitoring."""
+
+    ecosystem: Ecosystem
+    name: str
+    not_found_reason: str  # "404", "timeout", "offline", "error"
+    first_seen_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class PolicyConfig(BaseModel):
