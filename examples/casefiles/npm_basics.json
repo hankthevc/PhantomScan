@@ -1,0 +1,8 @@
+{
+  "title": "npm_basics",
+  "ecosystem": "npm",
+  "names": ["react", "lodash", "axios", "express"],
+  "policy_profile": "default",
+  "sleep_between_seconds": 0.1,
+  "description": "Demo casefile with popular npm packages for baseline scoring"
+}

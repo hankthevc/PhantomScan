@@ -1,0 +1,8 @@
+{
+  "title": "pypi_basics",
+  "ecosystem": "pypi",
+  "names": ["requests", "urllib3", "numpy", "pandas"],
+  "policy_profile": "default",
+  "sleep_between_seconds": 0.1,
+  "description": "Demo casefile with popular PyPI packages for baseline scoring"
+}

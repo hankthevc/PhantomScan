@@ -8,8 +8,8 @@ from radar.enrich.versions import _analyze_pypi_version_flip, analyze_version_hi
 from radar.types import PolicyConfig
 
 
-@pytest.fixture
-def policy():
+@pytest.fixture()
+def policy() -> PolicyConfig:
     """Create a test policy configuration."""
     return PolicyConfig(
         weights={},
@@ -18,7 +18,7 @@ def policy():
                 "timeout": 5,
             },
             "thresholds": {
-                "version_flip_dep_increase": 10,
+                "version_flip_window_days": 30,
             },
         },
         feed={},
@@ -28,8 +28,8 @@ def policy():
     )
 
 
-@pytest.fixture
-def pypi_json_current():
+@pytest.fixture()
+def pypi_json_current() -> dict:
     """Mock PyPI JSON for current version."""
     return {
         "info": {
@@ -46,14 +46,14 @@ def pypi_json_current():
             },
         },
         "releases": {
-            "1.0.0": [{"upload_time": "2023-01-01T00:00:00Z"}],
+            "1.0.0": [{"upload_time": "2023-05-20T00:00:00Z"}],  # Within 30-day window
             "2.0.0": [{"upload_time": "2023-06-01T00:00:00Z"}],
         },
     }
 
 
-@pytest.fixture
-def pypi_json_previous():
+@pytest.fixture()
+def pypi_json_previous() -> dict:
     """Mock PyPI JSON for previous version."""
     return {
         "info": {
@@ -74,12 +74,14 @@ def pypi_json_previous():
 @patch("radar.enrich.versions.is_offline_mode", return_value=False)
 @patch("radar.enrich.versions.httpx.Client")
 def test_analyze_pypi_version_flip_dep_increase(
-    mock_client_cls, mock_offline, pypi_json_current, pypi_json_previous, policy
-):
-    """Test version flip detection with dependency increase."""
-    # Current version has 3 deps, previous has 1 (increase of 2)
-    # Need to increase to trigger threshold
-    pypi_json_current["info"]["requires_dist"] = [f"dep{i}" for i in range(15)]
+    mock_client_cls: Mock,
+    pypi_json_current: dict,
+    pypi_json_previous: dict,
+    policy: PolicyConfig,
+) -> None:
+    """Test version flip detection with dependency increase >= 8."""
+    # Current version has 10 deps, previous has 1 (increase of 9 >= 8 threshold)
+    pypi_json_current["info"]["requires_dist"] = [f"dep{i}" for i in range(10)]
     pypi_json_previous["info"]["requires_dist"] = ["dep1"]
 
     mock_client = Mock()
@@ -94,18 +96,28 @@ def test_analyze_pypi_version_flip_dep_increase(
 
     risk, reasons = _analyze_pypi_version_flip(pypi_json_current, policy)
 
-    assert risk > 0.0
-    assert any("dependency increase" in r.lower() for r in reasons)
+    assert risk >= 0.6
+    assert any("dependencies" in r.lower() for r in reasons)
 
 
 @patch("radar.enrich.versions.is_offline_mode", return_value=False)
 @patch("radar.enrich.versions.httpx.Client")
-def test_analyze_pypi_version_flip_urls_removed(
-    mock_client_cls, mock_offline, pypi_json_current, pypi_json_previous, policy
-):
-    """Test version flip detection with removed project URLs."""
-    # Remove Source URL in current version
-    pypi_json_current["info"]["project_urls"] = {}
+def test_analyze_pypi_version_flip_urls_added(
+    mock_client_cls: Mock,
+    pypi_json_current: dict,
+    pypi_json_previous: dict,
+    policy: PolicyConfig,
+) -> None:
+    """Test version flip detection with added project URLs."""
+    # Add new URLs in current version
+    pypi_json_current["info"]["project_urls"] = {
+        "Source": "https://github.com/test/package",
+        "Documentation": "https://docs.test.com",
+        "Changelog": "https://docs.test.com/changelog",
+    }
+    pypi_json_previous["info"]["project_urls"] = {
+        "Source": "https://github.com/test/package",
+    }
 
     mock_client = Mock()
     mock_response = Mock()
@@ -117,15 +129,15 @@ def test_analyze_pypi_version_flip_urls_removed(
     mock_client.__exit__ = Mock(return_value=False)
     mock_client_cls.return_value = mock_client
 
-    risk, reasons = _analyze_pypi_version_flip(pypi_json_current, policy)
+    _risk, reasons = _analyze_pypi_version_flip(pypi_json_current, policy)
 
-    assert risk > 0.0
-    assert any("removed" in r.lower() for r in reasons)
+    assert any("documentation/project urls added" in r.lower() for r in reasons)
 
 
 @patch("radar.enrich.versions.is_offline_mode", return_value=False)
-def test_analyze_pypi_version_flip_no_previous(mock_offline, policy):
-    """Test version flip with no previous version."""
+def test_analyze_pypi_version_flip_no_previous_in_window(policy: PolicyConfig) -> None:
+    """Test version flip with no previous version in time window."""
+    # Only one version exists, so no previous version in window
     pypi_json = {
         "info": {"name": "test-package", "version": "1.0.0"},
         "releases": {
@@ -140,7 +152,7 @@ def test_analyze_pypi_version_flip_no_previous(mock_offline, policy):
 
 
 @patch("radar.enrich.versions.is_offline_mode", return_value=True)
-def test_analyze_pypi_version_flip_offline(mock_offline, policy):
+def test_analyze_pypi_version_flip_offline(policy: PolicyConfig) -> None:
     """Test that version flip returns 0 in offline mode."""
     risk, reasons = _analyze_pypi_version_flip({}, policy)
 
@@ -150,7 +162,7 @@ def test_analyze_pypi_version_flip_offline(mock_offline, policy):
 
 @patch("radar.enrich.versions.is_offline_mode", return_value=False)
 @patch("radar.enrich.versions.httpx.Client")
-def test_analyze_version_history_integration(mock_client_cls, mock_offline, policy):
+def test_analyze_version_history_integration(mock_client_cls: Mock, policy: PolicyConfig) -> None:
     """Test the main analyze_version_history function."""
     mock_client = Mock()
 
@@ -186,13 +198,13 @@ def test_analyze_version_history_integration(mock_client_cls, mock_offline, poli
     mock_client.__exit__ = Mock(return_value=False)
     mock_client_cls.return_value = mock_client
 
-    risk, reasons = analyze_version_history("test-package", "2.0.0", "pypi", policy)
+    risk, _reasons = analyze_version_history("test-package", "2.0.0", "pypi", policy)
 
     # Should not trigger threshold with only 1 additional dep
     assert risk >= 0.0
 
 
-def test_analyze_version_history_npm(policy):
+def test_analyze_version_history_npm(policy: PolicyConfig) -> None:
     """Test that npm ecosystem returns 0 (not supported)."""
     risk, reasons = analyze_version_history("test-package", "1.0.0", "npm", policy)
 
@@ -203,8 +215,11 @@ def test_analyze_version_history_npm(policy):
 @patch("radar.enrich.versions.is_offline_mode", return_value=False)
 @patch("radar.enrich.versions.httpx.Client")
 def test_analyze_pypi_version_flip_risk_capped(
-    mock_client_cls, mock_offline, pypi_json_current, pypi_json_previous, policy
-):
+    mock_client_cls: Mock,
+    pypi_json_current: dict,
+    pypi_json_previous: dict,
+    policy: PolicyConfig,
+) -> None:
     """Test that risk score is capped at 0.7."""
     # Set up multiple risk factors
     pypi_json_current["info"]["requires_dist"] = [f"dep{i}" for i in range(50)]
@@ -222,8 +237,7 @@ def test_analyze_pypi_version_flip_risk_capped(
     mock_client.__exit__ = Mock(return_value=False)
     mock_client_cls.return_value = mock_client
 
-    risk, reasons = _analyze_pypi_version_flip(pypi_json_current, policy)
+    risk, _reasons = _analyze_pypi_version_flip(pypi_json_current, policy)
 
     # Risk should be capped at 0.7
     assert risk <= 0.7
-

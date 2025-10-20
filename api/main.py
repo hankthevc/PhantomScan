@@ -135,6 +135,7 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
     Returns:
         Score breakdown and reasons
     """
+
     async def _score_with_enrichment() -> ScoreResponse:
         try:
             # Parse ecosystem
@@ -143,7 +144,9 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
             elif request.ecosystem.lower() == "npm":
                 ecosystem = Ecosystem.NPM
             else:
-                raise HTTPException(status_code=400, detail=f"Invalid ecosystem: {request.ecosystem}")
+                raise HTTPException(
+                    status_code=400, detail=f"Invalid ecosystem: {request.ecosystem}"
+                )
 
             # Parse created_at
             if request.created_at:
@@ -221,12 +224,11 @@ async def score_package(request: ScoreRequest) -> ScoreResponse:
 
     # Apply timeout to prevent long-running requests
     try:
-        return await asyncio.wait_for(_score_with_enrichment(), timeout=8.0)
+        policy = load_policy()
+        timeout = policy.network.get("api_timeout_seconds", 8)
+        return await asyncio.wait_for(_score_with_enrichment(), timeout=timeout)
     except TimeoutError as e:
-        raise HTTPException(
-            status_code=503,
-            detail="Scoring timeout - enrichment services may be overloaded"
-        ) from e
+        raise HTTPException(status_code=503, detail="Temporary overload: scoring timed out") from e
 
 
 @app.post("/casefile")
@@ -246,7 +248,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "name": request.name,
             "version": request.version,
             "score": request.score,
-            "created_at": request.created_at or datetime.now(timezone.utc).isoformat(),
+            "created_at": request.created_at or datetime.now(UTC).isoformat(),
             "homepage": request.homepage,
             "repository": request.repository,
             "maintainers_count": request.maintainers_count,
@@ -255,7 +257,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
             "reasons": request.reasons,
         }
 
-        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        date_str = datetime.now(UTC).strftime("%Y-%m-%d")
         output_path = generate_casefile(pkg_data, date_str)
 
         # Read generated content
@@ -271,7 +273,7 @@ async def generate_casefile_endpoint(request: CasefileRequest) -> JSONResponse:
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Casefile generation failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Casefile generation failed: {e!s}") from e
 
 
 @app.get("/")

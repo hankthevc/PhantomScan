@@ -16,16 +16,17 @@ def _analyze_pypi_version_flip(
     policy: PolicyConfig,
 ) -> tuple[float, list[str]]:
     """Analyze version flip for PyPI package.
-    
-    Compares current version metadata with previous version to detect:
+
+    Compares current version metadata with most recent previous version within a
+    rolling time window (default 30 days) to detect:
     - Sudden addition of console_scripts/entry_points
     - Dramatic increase in dependencies
     - Suspicious changes in project_urls
-    
+
     Args:
         info_json: Full PyPI JSON API response
         policy: Policy configuration with thresholds
-        
+
     Returns:
         Tuple of (risk_score, reasons_list)
     """
@@ -36,6 +37,8 @@ def _analyze_pypi_version_flip(
     risk = 0.0
 
     try:
+        from datetime import datetime, timedelta
+
         info = info_json.get("info", {})
         releases = info_json.get("releases", {})
         current_version = info.get("version", "")
@@ -43,26 +46,34 @@ def _analyze_pypi_version_flip(
         if not current_version or not releases:
             return 0.0, []
 
-        # Get sorted list of versions (latest first)
-        version_list = sorted(
-            [v for v in releases.keys() if releases[v]],
-            reverse=True,
-        )
-
-        if len(version_list) < 2:
-            # No previous version to compare
+        # Find current version's upload time
+        current_release_info = releases.get(current_version)
+        if not current_release_info or not current_release_info[0].get("upload_time"):
             return 0.0, []
 
-        # Find previous version
-        if current_version not in version_list:
-            return 0.0, []
+        current_upload_str = current_release_info[0]["upload_time"]
+        current_upload = datetime.fromisoformat(current_upload_str.replace("Z", "+00:00"))
 
-        current_idx = version_list.index(current_version)
-        if current_idx >= len(version_list) - 1:
-            # No previous version
-            return 0.0, []
+        # Time window (default 30 days)
+        window_days = policy.heuristics.get("thresholds", {}).get("version_flip_window_days", 30)
+        window_start = current_upload - timedelta(days=window_days)
 
-        previous_version = version_list[current_idx + 1]
+        # Find most recent previous version within window
+        previous_version = None
+        for ver, rel_info in sorted(releases.items(), key=lambda x: x[0], reverse=True):
+            if ver == current_version or not rel_info:
+                continue
+            upload_str = rel_info[0].get("upload_time")
+            if not upload_str:
+                continue
+            upload_time = datetime.fromisoformat(upload_str.replace("Z", "+00:00"))
+            if upload_time < current_upload and upload_time >= window_start:
+                previous_version = ver
+                break
+
+        if not previous_version:
+            # No previous version in window
+            return 0.0, []
 
         # Fetch previous version metadata
         package_name = info.get("name")
@@ -95,8 +106,12 @@ def _analyze_pypi_version_flip(
 
         # Entry points are often in requires_dist or project metadata
         # For simplicity, check if they appear in the JSON structure
-        current_has_scripts = "console_scripts" in str(current_entry_points) if current_entry_points else False
-        prev_has_scripts = "console_scripts" in str(prev_entry_points) if prev_entry_points else False
+        current_has_scripts = (
+            "console_scripts" in str(current_entry_points) if current_entry_points else False
+        )
+        prev_has_scripts = (
+            "console_scripts" in str(prev_entry_points) if prev_entry_points else False
+        )
 
         if current_has_scripts and not prev_has_scripts:
             risk = max(risk, 0.5)
@@ -108,30 +123,25 @@ def _analyze_pypi_version_flip(
 
         if isinstance(current_deps, list) and isinstance(prev_deps, list):
             dep_increase = len(current_deps) - len(prev_deps)
-            threshold = policy.heuristics.get("thresholds", {}).get("version_flip_dep_increase", 10)
+            threshold = 8  # Stricter threshold per requirements
 
             if dep_increase >= threshold:
-                risk = max(risk, 0.5)
+                risk = max(risk, 0.6)
                 reasons.append(
-                    f"Dramatic dependency increase: +{dep_increase} dependencies "
-                    f"({len(prev_deps)} → {len(current_deps)})"
+                    f"Version flip: +{dep_increase} dependencies in {current_version} vs {previous_version}"
                 )
 
         # 3. Check for suspicious project_urls changes
         current_urls = current_info.get("project_urls") or {}
         prev_urls = prev_info.get("project_urls") or {}
 
-        # Check if source/docs removed
-        if prev_urls and not current_urls:
-            risk = max(risk, 0.2)
-            reasons.append("Project URLs removed entirely")
-        elif prev_urls:
-            important_keys = ["Source", "Repository", "Documentation", "Homepage"]
-            for key in important_keys:
-                if key in prev_urls and key not in current_urls:
-                    risk = max(risk, 0.2)
-                    reasons.append(f"Removed project URL: {key}")
-                    break
+        # Check for added URLs (new documentation/project URLs in latest version)
+        if current_urls and not prev_urls:
+            reasons.append("New documentation/project URLs added in latest version")
+        elif isinstance(current_urls, dict) and isinstance(prev_urls, dict):
+            new_keys = set(current_urls.keys()) - set(prev_urls.keys())
+            if new_keys:
+                reasons.append("New documentation/project URLs added in latest version")
 
         # Cap risk at 0.7
         risk = min(0.7, risk)
@@ -145,20 +155,20 @@ def _analyze_pypi_version_flip(
 
 def analyze_version_history(
     candidate_name: str,
-    candidate_version: str,
+    _candidate_version: str,
     ecosystem: str,
     policy: PolicyConfig,
 ) -> tuple[float, list[str]]:
     """Analyze version history for suspicious changes.
-    
+
     Currently supports PyPI only.
-    
+
     Args:
         candidate_name: Package name
-        candidate_version: Current version
+        _candidate_version: Current version (unused, for API compatibility)
         ecosystem: "pypi" or "npm"
         policy: Policy configuration
-        
+
     Returns:
         Tuple of (risk_score, reasons_list)
     """
@@ -185,4 +195,3 @@ def analyze_version_history(
     except Exception as e:
         console.print(f"[yellow]Warning: Version history analysis failed: {e}[/yellow]")
         return 0.0, []
-
